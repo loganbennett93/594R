@@ -1,3 +1,108 @@
-# Methods
+# 4 Methods
 
-We describe our methods in this chapter.
+We modified a dataset provided by Utah Transit Authority (UTA) to verify the affects of several TSP strategies on headway variation of the UVX BRT system. This BRT system is a 10 mile line between Provo and Orem and was open for public use as of January 9, 2019. The demographics of this area are particularly marked by the presence of two large universities in the area, Brigham Young University in Provo and Utah Valley University in Orem. With over 30,000 students in enrolled in each respective institution each year, a great deal of traffic demand is created between students traveling to and from school, especially considering the fact that housing and job demands are driven by students. For this reason there is a decent amount of UVU students who live in Provo, and the need to make the Provo-Orem commute causes considerable delay during peak hours. In conjunction with servicing other demographics of the population, servicing student needs was a large factor in the decision to implement a BRT system in this area.
+
+## 4.1 Data
+
+We created an analysis dataset from UTA's raw dataset that included timepoint data for all UVX BRT trips from January 2, 2019 to December 30, 2019. The dataset was cleaned and reoriented to reflect data that would be useful in analyzing the distribution of headways over different times of day, locations, and TSP thresholds. We retained within the dataset routes, trips, stops, and vehicles. We simplified the format of these datapoints and created a new variable to hold information regarding reliability, or the difference between scheduled departures and actual departures. we also changed the level descriptions of the TSP thresholds.
+
+```{r setup method, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+library(tidyverse)
+library(readxl)
+library(lubridate)
+```
+
+```{r my_df, eval = FALSE}
+(df <- df %>%
+  transmute(
+    # Route and direction IDs
+    route = Route, direction = substr(Direction, 0, 2), 
+    trip = Trip,
+    timepoint = `Time Point`,
+    vehicle = Vehicle,
+    
+    # Time points
+    date = as_date(NEW_Date),
+    time = as_datetime(str_c(NEW_Date, " ", DepartureTime)),
+    schedule = as_datetime(str_c(NEW_Date, " ", Schedule, ":00")),
+    reliability = time - schedule,
+    dwell = as.difftime(str_c("00:", Dwell)),
+    travel = as.difftime(Travel),
+    
+    # change level descriptions for TSP thresholds
+    threshold = factor(Threshold, levels = c("OFF", "5", "2", "ON"), 
+                       labels = c("No TSP", "5 min", "2 min", "Always"))
+  ))
+```
+
+We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.
+
+```{r headway, eval = FALSE}
+df <- df %>%
+  group_by(direction, timepoint) %>%
+  arrange(time, .by_group = TRUE) %>%
+  mutate(
+    hw_actl = time - lead(time),
+    hw_schd = schedule - lead(schedule),
+    discrepancy = hw_schd - hw_actl
+  )
+```
+
+```{r cumdwell, eval = FALSE}
+df <- df %>%
+  group_by(direction, trip, date) %>%
+  arrange(time, .by_group = TRUE) %>%
+  mutate(
+    cumdwell = cumsum(as.numeric(dwell))
+  )
+```
+
+The team noticed some data integrity issues, particularly cases where large discrepancies between scheduled and actual headway were taking place. Those outliers can be seen below.
+
+```{r hist-disc, echo = FALSE}
+knitr::include_graphics("Data/hist-disc.png")
+```
+
+Investigation of these large discrepancies led the team to discover that they tended to occur at certain stops along the route, particularly at the Provo Frontrunner station, as well as at times early in the morning and late at night.
+
+```{r large-discrepancy, eval = FALSE}
+# find places where the discrepancy is large
+(large_discrepancy <- df %>% ungroup() %>%
+  arrange(-abs(discrepancy)) %>%
+  filter(abs(discrepancy) >= 1000) %>%
+  select(direction, trip, timepoint, time, discrepancy))
+
+large_discrepancy %>% 
+  group_by(timepoint) %>% 
+  tally() %>% arrange(-n)
+
+large_discrepancy %>% 
+  group_by(trip) %>% 
+  tally() %>% arrange(-n)
+```
+
+The distribution of discrepancies was shown to improve in normalcy with the omission of headways occurring before 7 PM and after 8 PM. Southbound trips at both the Provo Frontrunner 1 and Provo Frontrunner 2 stops were also omitted since the buses stop twice at the same location in the same direction.
+
+```{r study-df, eval = FALSE}
+study_df <- df %>%
+  ungroup() %>%
+  mutate(
+    hour = lubridate::hour(time),
+    weekday = lubridate::wday(time)
+  ) %>%
+  filter(
+    !weekday %in% c("Saturday", "Sunday"),
+    hour >= 7, hour <= 20
+  )
+
+study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint == "PROVFRST - 2"),]
+```
+
+The cleaned dataset had a better distribution of headway discrepancies, as is seen below.
+
+```{r hist-disc-study, echo = FALSE}
+knitr::include_graphics("Data/hist-disc-study.png")
+```
+
+This data is ready for analysis of headway distributions based off of modifications to TSP strategies.
