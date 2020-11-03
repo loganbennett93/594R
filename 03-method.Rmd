@@ -1,8 +1,8 @@
-# 4 Methods
+# Methods
 
 We modified a dataset provided by Utah Transit Authority (UTA) to verify the affects of several TSP strategies on headway variation of the UVX BRT system. This BRT system is a 10 mile line between Provo and Orem and was open for public use as of January 9, 2019. The demographics of this area are particularly marked by the presence of two large universities in the area, Brigham Young University in Provo and Utah Valley University in Orem. With over 30,000 students in enrolled in each respective institution each year, a great deal of traffic demand is created between students traveling to and from school, especially considering the fact that housing and job demands are driven by students. For this reason there is a decent amount of UVU students who live in Provo, and the need to make the Provo-Orem commute causes considerable delay during peak hours. In conjunction with servicing other demographics of the population, servicing student needs was a large factor in the decision to implement a BRT system in this area.
 
-## 4.1 Data
+## Data
 
 We created an analysis dataset from UTA's raw dataset that included timepoint data for all UVX BRT trips from January 2, 2019 to December 30, 2019. The dataset was cleaned and reoriented to reflect data that would be useful in analyzing the distribution of headways over different times of day, locations, and TSP thresholds. We retained within the dataset routes, trips, stops, and vehicles. We simplified the format of these datapoints and created a new variable to hold information regarding reliability, or the difference between scheduled departures and actual departures. we also changed the level descriptions of the TSP thresholds.
 
@@ -61,7 +61,7 @@ df <- df %>%
 The team noticed some data integrity issues, particularly cases where large discrepancies between scheduled and actual headway were taking place. Those outliers can be seen below.
 
 ```{r hist-disc, echo = FALSE}
-knitr::include_graphics("Data/hist-disc.png")
+knitr::include_graphics("Data/hist-disc.jpg")
 ```
 
 Investigation of these large discrepancies led the team to discover that they tended to occur at certain stops along the route, particularly at the Provo Frontrunner station, as well as at times early in the morning and late at night.
@@ -102,7 +102,7 @@ study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint
 The cleaned dataset had a better distribution of headway discrepancies, as is seen below.
 
 ```{r hist-disc-study, echo = FALSE}
-knitr::include_graphics("Data/hist-disc-study.png")
+knitr::include_graphics("Data/hist-disc-study.jpg")
 ```
 
 This data is ready for analysis of headway distributions based off of modifications to TSP strategies.

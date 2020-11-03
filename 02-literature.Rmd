@@ -29,7 +29,7 @@ Cats (2014) performed a study of a regularity-driven operation scheme in Stockho
 Both of these studies effectively demonstrate that solutions to bunching and other reliability-based operational problems are most effectively addressed through reliability-based control strategies. However, little has been done to evaluate the relationship between methods of TSP in a reliability-based control strategy. A study of TSP strategies with a focus on headway distribution could prove useful in gauging the benefits of TSP in a headway-based system, such as the UVX BRT system in Utah Valley.  
 
 
-    
+## References
     
 
 Al-Deek, H., Sandt, A., Alomari, A., Hussain, O. (2017). A technical note on evaluating the effectiveness of bus rapid transit with transit signal priority. Journal of Intelligent Transportation Systems, 21(3), 227-238. https://doi.org/10.1080/15472450.2017.1286987  
