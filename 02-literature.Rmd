@@ -2,11 +2,20 @@
 
 Bus Rapid Transit (BRT) systems are increasingly used by cities around the world due to their ability to address high passenger demand without exorbitant upfront costs. The cost savings come from the fact that BRTs operate on Right-of-Way category B (ROW-B) facilities with separated designated lanes that are subject to traffic control at intersections. In this way, buses have an unimpeded corridor on which to complete trips. However, the subjection to traffic control creates variability in the operating times of these systems, and several strategies have been developed and implemented to increase their reliability and operating times.One such strategy is the use of Transit Signal Priority (TSP), which alters priority at signalized intersections to provide for reduced running times between stops and a more even distribution of headways. In general, TSP seeks to improve operations by increasing the efficiency with which buses navigate signalized intersections, but it can be distinguished by a few classes(Delgado et al. 2019):  
 
-1.Active or passive priority. Active priority involves timing adjustments made according to real-time data. Passive priority involves offline measures, such as optimized cycle lengths, based off of historical data.  
+  1.Active or passive priority. Active priority involves timing adjustments made
+  according to real-time data. Passive priority involves offline measures, such
+  as optimized cycle lengths, based off of historical data.
 
-2.Total, partial, orrelative priority.In total priority, control actions such as phase jumping, phase insertion, green extension, or early termination of the red seek to create zero delay for buses. Partial priority limits control actions to those that provide less interruptions to other traffic, such as green extensions and early termination of the red. In relative priority, buses compete with general traffic at lights for priority.  
+  2.Total, partial, or relative priority. In total priority, control actions such
+  as phase jumping, phase insertion, green extension, or early termination of
+  the red seek to create zero delay for buses. Partial priority limits control
+  actions to those that provide less interruptions to other traffic, such as
+  green extensions and early termination of the red. In relative priority, buses
+  compete with general traffic at lights for priority.
 
-3.Unconditional or conditional priority. Unconditional priority means buses receive priority at all times whereas conditional priority only provides buses with needed control measures when the buses are late.  
+  3.Unconditional or conditional priority. Unconditional priority means buses
+  receive priority at all times whereas conditional priority only provides buses
+  with needed control measures when the buses are late.
 
 Adaptive signal priority involves real-time control adjustments made in order to optimize the throughput of both buses and general traffic,in which the delay of each is considered and a controller decides on a response most pertinent to the current traffic conditions. Ni et al. (2020) compares adaptive signal priority with active and passive priority, whereas Al-Deek et al. (2017) groups it with unconditional and conditional priority.  
 
