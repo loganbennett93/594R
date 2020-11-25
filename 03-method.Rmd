@@ -14,6 +14,7 @@ library(lubridate)
 ```
 
 ```{r my_df, eval = FALSE}
+# Where do you read and store the data?
 (df <- df %>%
   transmute(
     # Route and direction IDs
@@ -61,6 +62,7 @@ df <- df %>%
 The team noticed some data integrity issues, particularly cases where large discrepancies between scheduled and actual headway were taking place. Those outliers can be seen below.
 
 ```{r hist-disc, echo = FALSE}
+# why not create the figure here?
 knitr::include_graphics("Data/hist-disc.jpg")
 ```
 
