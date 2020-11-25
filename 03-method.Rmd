@@ -13,8 +13,16 @@ library(readxl)
 library(lubridate)
 ```
 
+```{r load, eval = FALSE}
+(df <- read_csv(
+  "UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  col_types = str_c(rep("c", 24), collapse = "")
+  ))
+```
+
 ```{r my_df, eval = FALSE}
 # Where do you read and store the data?
+# I added the code above that shows where my data is stored and where I read it from.
 (df <- df %>%
   transmute(
     # Route and direction IDs
@@ -63,6 +71,16 @@ The team noticed some data integrity issues, particularly cases where large disc
 
 ```{r hist-disc, echo = FALSE}
 # why not create the figure here?
+# Because we're not evaluating the chunks in this file, the data isn't set up to create them here
+# When I try to run the code below, it gives me an error with the ungroup function, I think for the reason stated above
+
+#df %>%
+#  ungroup() %>%
+#  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+#  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+#  geom_histogram() +
+#  scale_x_log10() +
+#  xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 knitr::include_graphics("Data/hist-disc.jpg")
 ```
 
@@ -104,6 +122,12 @@ study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint
 The cleaned dataset had a better distribution of headway discrepancies, as is seen below.
 
 ```{r hist-disc-study, echo = FALSE}
+#study_df %>%
+ # mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  #ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  #geom_histogram() +
+  #scale_x_log10() +
+  #xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 knitr::include_graphics("Data/hist-disc-study.jpg")
 ```
 
