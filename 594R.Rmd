@@ -1,6 +1,221 @@
+--- 
+title: "UVX Headway Distribution"
+author: "Logan Bennett"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is the book written for my 584R project."
+---
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction
+
+Bus Rapid Transit (BRT) systems make use of traffic signal prioritization and preemption (TSP) to increase system reliability, or the consistency with which these systems maintain established schedules. Studies have been done to determine the effects of prioritization on reliability, but less has been done to evaluate the effectiveness of changes to TSP on headway distributions. The UVX BRT system is a fairly new transit network in Utah County. This system makes use of signal prioritization not to maintain a set schedule of arrivals and departures, but rather to achieve consistent headways, or times between the arrivals of buses. What are the effects of variable signal prioritization to the headway distribution of this fleet of buses? Can altering signal priority timing affect the distribution of headway times, leading to more uniformity in arrivals? I plan to use a dataset of UVX arrival data provided by Utah Transit Authority (UTA) to evaluate the effects of signal priority on headways. I will then perform statistical analyses on the dataset to verify what if any of these changes are significant in achieving improved distributions.
+
+<!--chapter:end:01-intro.Rmd-->
+
+# Literature
+
+Bus Rapid Transit (BRT) systems are increasingly used by cities around the world due to their ability to address high passenger demand without exorbitant upfront costs. The cost savings come from the fact that BRTs operate on Right-of-Way category B (ROW-B) facilities with separated designated lanes that are subject to traffic control at intersections. In this way, buses have an unimpeded corridor on which to complete trips. However, the subjection to traffic control creates variability in the operating times of these systems, and several strategies have been developed and implemented to increase their reliability and operating times.One such strategy is the use of Transit Signal Priority (TSP), which alters priority at signalized intersections to provide for reduced running times between stops and a more even distribution of headways. In general, TSP seeks to improve operations by increasing the efficiency with which buses navigate signalized intersections, but it can be distinguished by a few classes (@DELGADO201528):  
+
+  1.Active or passive priority. Active priority involves timing adjustments made
+  according to real-time data. Passive priority involves offline measures, such
+  as optimized cycle lengths, based off of historical data.
+
+  2.Total, partial, or relative priority. In total priority, control actions such
+  as phase jumping, phase insertion, green extension, or early termination of
+  the red seek to create zero delay for buses. Partial priority limits control
+  actions to those that provide less interruptions to other traffic, such as
+  green extensions and early termination of the red. In relative priority, buses
+  compete with general traffic at lights for priority.
+
+  3.Unconditional or conditional priority. Unconditional priority means buses
+  receive priority at all times whereas conditional priority only provides buses
+  with needed control measures when the buses are late.
+
+Adaptive signal priority involves real-time control adjustments made in order to optimize the throughput of both buses and general traffic,in which the delay of each is considered and a controller decides on a response most pertinent to the current traffic conditions. @NI20201 compares adaptive signal priority with active and passive priority, whereas @ALDEEK2017227 groups it with unconditional and conditional priority.  
+
+Many studies have been done to determine the effects of various TSP strategies and configurations. In general, TSP strategies have been found to improve performance of transit systems such as BRT in a number of ways, including reduced delay, improved reliability, and mitigated effects on general traffic.  
+
+@ISHAQ2020946 used a set of trip data from a BRT system in Haifa, Israel to study the relation between service reliability, fleet management, and service utilization. They found that full and unconditional traffic signal priority given at all signals led to an 18% reduction in total vehicle trip time and contributed to a 60% reduction in the standard deviation of trip time. Similarly, @ALDEEK2017227 found that compared to several other TSP strategies, BRT with unconditional TSP provided the best travel time, speed, number of stops, and delay enhancements but resulted in significant crossing street delays, especially at major intersections with high traffic demand. While the unconditionalTSP strategy was found effective in termsof the delay of the BRT system, concerns rise over the effects on side-street traffic if unconditional priority consistently gives right of way to the buses. @Liu2018 clarified that “signal priorities are provided more efficiently and on a more informed basis, with fewer impacts on other traffic operations than the use of unconditional TSP.”The implementation of unconditional TSP may only be practical where crossing street volumes are low, and must reasonably be done in conjunction with studies of how non-transit traffic is effected, as each system’s corridors have differing needs based off of demand and geometry.  
+
+@Liu2018 performed a study using transit operation data from a bus route found in Salt Lake County, Utah. A microscopic simulation was used to test GPS-based TSP scenarios. GPS-based TSP uses a GPS to achieve real-time (active) bus locating and advanced wireless communication technologies to achieve comprehensive analysis of operating information. Then a data-driven optimization method was implemented to understand the effects of flexible granting of signal priority across several models. They found that overall, BRT travel time decreased in all models where TSP was employed when compared to the base BRT model. @ALDEEK2017227 also used simulation models to compare several scenarios. Using field data from a corridor in Orlando, Florida, they found that BRT with conditional TSP that was engaged when the buses were 3 minutes behind experienced significantly improved travel times, average speed, and average total delay per vehicle, with minor effects on crossing street delays, when compared with BRT systems with no TSP or 5-minute conditional thresholds.These results indicate that TSP methods are effective in reducing delay. However, they ignore the important aspect of system reliability, which is critical to improving running times and maintaining ridership.  
+
+@YANG20151 performed a study of a pre-detective TSP strategy for BRT with active priority coordination between primary and secondary intersections using data from Changzhou, China. Using microscopic simulation, they tested three scenarios (traditional TSP, pre-detective TSP, and pre-detective TSP with coordination) against a no TSP base scenario. They found that pre-detective signal priority with coordination was most effective, with bus intersection delay decreasing by 67.4% and headway adherence improving by about 40% when compared with a no TSP strategy, while reducing normal traffic delay.  
+
+@DELGADO201528 studied station and interstation control jointly to determine an optimal control strategy for a single-service transit corridor applied to a high-frequency transit system, with the goal of evaluating effects over the whole corridor. A strategy of green extension with holding buses at stops was shown to produce a greater reduction in waiting times for users, as well as reducing variability and improving headway adherence.  
+
+@NI20201 performed a study of passive TSP control for a BRT system in Taichung, Taiwan. Microsimulation incorporated with a genetic algorithm was developed to coordinate signal offsets along an arterial with BRT operations, with the purpose of balancing improvements in BRT system delays and changes to LOS of other traffic. They found that passive TSP control can reduce approximately 22% of transit delay, with the smallest delay experienced in conjunction with a strategy of a three-minute scheduled headway. Additionally, the 3-minute departure headway scenario exhibited the best service reliability among the scenarios, with a headway stability near 100%.  
+
+These studies indicate the need to view BRT system performance in terms of both system delay and reliability. Especially when viewed across an entire system, it is possible for running times to remain consistent while reliability of individual buses is low. In particular, a bunching phenomenon may occur from a positive feedback loop of fluctuations in passenger demand and traffic conditions (@DELGADO201528).In scenarios where bunching is a problem, it may not be sufficient to base control strategies off of a schedule, rather on reliable operations. This may prove difficult in implementation. For instance, @ISHAQ2020946 noted that the procurement agreement between the public transport authority in Israel and the incumbent operator implies that a schedule-based control strategy is required, as opposed to a headway-based (reliability-based) control strategy. However, when TSP control strategies are reliability-based, measures of reliability increase and the bunching phenomenon can be reduced.
+
+@CATS2014223 performed a study of a regularity-driven operation scheme in Stockholm, Sweden to improve reliability and mitigate bus bunching. Using a series of field experiments and measuring performance with regularity indicators such as headway coefficient of variation, headway adherence, and average excess waiting time, he determined that a headway-based control strategy was effective in not only narrowing the headway distribution from the previous schedule-bases strategy, but also reducing waiting times, more evenly distributing dwell times, and maintaining running times. @CHEN2012 also performed a headway-based study to measure the effects of real-time preventive operations control. They found that reliability is improved with lower permitted headway deviations and lower fluctuations of running times. When real-time information is used to predict service reliability and trigger preventive control, such as reduced dwell time and speed adjustments, bus bunching can be reduced.
+
+Both of these studies effectively demonstrate that solutions to bunching and other reliability-based operational problems are most effectively addressed through reliability-based control strategies. However, little has been done to evaluate the relationship between methods of TSP in a reliability-based control strategy. A study of TSP strategies with a focus on headway distribution could prove useful in gauging the benefits of TSP in a headway-based system, such as the UVX BRT system in Utah Valley.  
+
+
+## References
+    
+
+Al-Deek, H., Sandt, A., Alomari, A., Hussain, O. (2017). A technical note on evaluating the effectiveness of bus rapid transit with transit signal priority. Journal of Intelligent Transportation Systems, 21(3), 227-238. https://doi.org/10.1080/15472450.2017.1286987  
+
+Cats, O. (2014). Regularity-driven bus operation: Principles, implementation and business models. Transport Policy, 36, 223-230. https://doi.org/10.1016/j.tranpol.2014.09.002  
+
+Chen, W., Yang, C., Feng, F., Chen, Z. (2012). An Improved Model for Headway-Based Bus Service Unreliability Prevention with Vehicle Load Capacity Constraint at Bus Stops. Discrete Dynamics in Transportation Systems, 2012. https://doi.org/10.1155/2012/313518  
+
+Delgado,F., Muñoz,J.C., Giesen,R., Wilson,N.H.M. (2015). Integrated Real-Time Transit Signal Priority Control for High-Frequency Segregated Transit Services.Transportation Research Record, 2533(1), 28-38. https://doi.org/10.3141/2533-04  
+
+Ishaq, R., & Cats, O.(2020). Designing bus rapid transit systems:Lessons on service reliability and operations. Case Studies on Transport Policy, 8(3), 946-953. https://doi.org/10.1016/j.cstp.2020.05.001  
+
+Liu, X.C., Zlatkovic, M., Porter, R.J., Fayyaz, K., Yu, S.(2018). Improving Efficiency and Reliability of Bus Rapid Transit, MPC-18-349. North Dakota State University -Upper Great Plains Transportation Institute, Fargo: Mountain-Plains Consortium, 2018.  
+
+Ni, Y., Lo, H., Hsu, Y. (2020). Exploring the effects of passive transit signal priority design on bus rapid transit operation: a microsimulation-based optimization approach. Transportation Letters. https://doi.org/10.1080/19427867.2020.1805681  
+
+Yang, M., Sun, G., Wang, W., Sun, X., Ding, J., & Han, J. (2018). Evaluation of the pre-detective signal priority for bus rapid transit: coordinating the primary and secondary intersections.Transport,33(1), 41-51. https://doi.org/10.3846/16484142.2015.1004556
+
+<!--chapter:end:02-literature.Rmd-->
+
+# Methods
+
+We modified a dataset provided by Utah Transit Authority (UTA) to verify the affects of several TSP strategies on headway variation of the UVX BRT system. This BRT system is a 10 mile line between Provo and Orem and was open for public use as of January 9, 2019. The demographics of this area are particularly marked by the presence of two large universities in the area, Brigham Young University in Provo and Utah Valley University in Orem. With over 30,000 students in enrolled in each respective institution each year, a great deal of traffic demand is created between students traveling to and from school, especially considering the fact that housing and job demands are driven by students. For this reason there is a decent amount of UVU students who live in Provo, and the need to make the Provo-Orem commute causes considerable delay during peak hours. In conjunction with servicing other demographics of the population, servicing student needs was a large factor in the decision to implement a BRT system in this area.
+
+## Data
+
+We created an analysis dataset from UTA's raw dataset that included timepoint data for all UVX BRT trips from January 2, 2019 to December 30, 2019. The dataset was cleaned and reoriented to reflect data that would be useful in analyzing the distribution of headways over different times of day, locations, and TSP thresholds. We retained within the dataset routes, trips, stops, and vehicles. We simplified the format of these datapoints and created a new variable to hold information regarding reliability, or the difference between scheduled departures and actual departures. we also changed the level descriptions of the TSP thresholds.
+
+```{r setup method, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+library(tidyverse)
+library(readxl)
+library(lubridate)
+```
+
+```{r load, echo = FALSE}
+(df <- read_csv(
+  "UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  col_types = str_c(rep("c", 24), collapse = "")
+  ))
+```
+
+```{r my_df, echo = FALSE}
+# Where do you read and store the data?
+# I added the code above that shows where my data is stored and where I read it from.
+(df <- df %>%
+  transmute(
+    # Route and direction IDs
+    route = Route, direction = substr(Direction, 0, 2), 
+    trip = Trip,
+    timepoint = `Time Point`,
+    vehicle = Vehicle,
+    
+    # Time points
+    date = as_date(mdy(NEW_Date)),
+    time = as_datetime(str_c(mdy(NEW_Date), " ", DepartureTime)),
+    schedule = as_datetime(str_c(mdy(NEW_Date), " ", Schedule, ":00")),
+    reliability = time - schedule,
+    dwell = as.difftime(str_c("00:", Dwell)),
+    travel = as.difftime(Travel),
+    
+    # change level descriptions for TSP thresholds
+    threshold = factor(Threshold, levels = c("OFF", "5", "2", "ON"), 
+                       labels = c("No TSP", "5 min", "2 min", "Always"))
+  ))
+```
+
+We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.
+
+```{r headway, echo = FALSE}
+df <- df %>%
+  group_by(direction, timepoint) %>%
+  arrange(time, .by_group = TRUE) %>%
+  mutate(
+    hw_actl = time - lead(time),
+    hw_schd = schedule - lead(schedule),
+    discrepancy = hw_schd - hw_actl
+  )
+```
+
+```{r cumdwell, echo = FALSE}
+df <- df %>%
+  group_by(direction, trip, date) %>%
+  arrange(time, .by_group = TRUE) %>%
+  mutate(
+    cumdwell = cumsum(as.numeric(dwell))
+  )
+```
+
+The team noticed some data integrity issues, particularly cases where large discrepancies between scheduled and actual headway were taking place. Those outliers can be seen below.
+
+```{r hist-disc, echo = FALSE}
+# why not create the figure here?
+# I just needed to change eval = FALSE to echo = FALSE. Since R knits in a fresh session, the required inputs were not available to plot
+
+df %>%
+ ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
+```
+
+Investigation of these large discrepancies led the team to discover that they tended to occur at certain stops along the route, particularly at the Provo Frontrunner station, as well as at times early in the morning and late at night.
+
+```{r large-discrepancy, echo = FALSE}
+# find places where the discrepancy is large
+(large_discrepancy <- df %>% ungroup() %>%
+  arrange(-abs(discrepancy)) %>%
+  filter(abs(discrepancy) >= 1000) %>%
+  select(direction, trip, timepoint, time, discrepancy))
+
+large_discrepancy %>% 
+  group_by(timepoint) %>% 
+  tally() %>% arrange(-n)
+
+large_discrepancy %>% 
+  group_by(trip) %>% 
+  tally() %>% arrange(-n)
+```
+
+The distribution of discrepancies was shown to improve in normalcy with the omission of headways occurring before 7 PM and after 8 PM. Southbound trips at both the Provo Frontrunner 1 and Provo Frontrunner 2 stops were also omitted since the buses stop twice at the same location in the same direction.
+
+```{r study-df, echo = FALSE}
+study_df <- df %>%
+  ungroup() %>%
+  mutate(
+    hour = lubridate::hour(time),
+    weekday = lubridate::wday(time)
+  ) %>%
+  filter(
+    !weekday %in% c("Saturday", "Sunday"),
+    hour >= 7, hour <= 20
+  )
+
+study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint == "PROVFRST - 2"),]
+```
+
+The cleaned dataset had a better distribution of headway discrepancies, as is seen below.
+
+```{r hist-disc-study, echo = FALSE}
+study_df %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
+```
+
+This data is ready for analysis of headway distributions based off of modifications to TSP strategies.
+
+<!--chapter:end:03-method.Rmd-->
+
 # Applications
 
-```{r setup method 4, include = FALSE}
+```{r setup method, include = FALSE}
 knitr::opts_chunk$set(cache = TRUE)
 library(tidyverse)
 library(readxl)
@@ -66,7 +281,7 @@ A comparison of headway distributions for separate locations and directions of t
 
 We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.
 
-```{r headway 4, echo = FALSE}
+```{r headway, echo = FALSE}
 df <- df %>%
   group_by(direction, timepoint) %>%
   arrange(time, .by_group = TRUE) %>%
@@ -77,7 +292,7 @@ df <- df %>%
   )
 ```
 
-```{r cumdwell 4, echo = FALSE}
+```{r cumdwell, echo = FALSE}
 df <- df %>%
   group_by(direction, trip, date) %>%
   arrange(time, .by_group = TRUE) %>%
@@ -86,7 +301,7 @@ df <- df %>%
   )
 ```
 
-```{r study-df 4, echo = FALSE}
+```{r study-df, echo = FALSE}
 study_df <- df %>%
   ungroup() %>%
   mutate(
@@ -471,4 +686,19 @@ The test performed above compares the two cumulative distribution plots shown. T
 
 **Further analysis needs to be done regarding TSP thresholds, since I was unsure of how to fit them into this analysis. I hope to meet with Dr. Macfarlane sometime this week to go over the work I've done and receive clarification on some tests so I can make the necessary modifications.**
 
+
+
+<!--chapter:end:04-application.Rmd-->
+
+# Final Words
+
+We have finished a nice book.
+
+<!--chapter:end:05-summary.Rmd-->
+
+`r if (knitr::is_html_output()) '
+# References {-}
+'`
+
+<!--chapter:end:06-references.Rmd-->
 
