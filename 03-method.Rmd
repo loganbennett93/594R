@@ -13,14 +13,14 @@ library(readxl)
 library(lubridate)
 ```
 
-```{r load, eval = FALSE}
+```{r load, echo = FALSE}
 (df <- read_csv(
   "UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
   col_types = str_c(rep("c", 24), collapse = "")
   ))
 ```
 
-```{r my_df, eval = FALSE}
+```{r my_df, echo = FALSE}
 # Where do you read and store the data?
 # I added the code above that shows where my data is stored and where I read it from.
 (df <- df %>%
@@ -32,9 +32,9 @@ library(lubridate)
     vehicle = Vehicle,
     
     # Time points
-    date = as_date(NEW_Date),
-    time = as_datetime(str_c(NEW_Date, " ", DepartureTime)),
-    schedule = as_datetime(str_c(NEW_Date, " ", Schedule, ":00")),
+    date = as_date(mdy(NEW_Date)),
+    time = as_datetime(str_c(mdy(NEW_Date), " ", DepartureTime)),
+    schedule = as_datetime(str_c(mdy(NEW_Date), " ", Schedule, ":00")),
     reliability = time - schedule,
     dwell = as.difftime(str_c("00:", Dwell)),
     travel = as.difftime(Travel),
@@ -47,7 +47,7 @@ library(lubridate)
 
 We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.
 
-```{r headway, eval = FALSE}
+```{r headway, echo = FALSE}
 df <- df %>%
   group_by(direction, timepoint) %>%
   arrange(time, .by_group = TRUE) %>%
@@ -58,7 +58,7 @@ df <- df %>%
   )
 ```
 
-```{r cumdwell, eval = FALSE}
+```{r cumdwell, echo = FALSE}
 df <- df %>%
   group_by(direction, trip, date) %>%
   arrange(time, .by_group = TRUE) %>%
@@ -71,22 +71,20 @@ The team noticed some data integrity issues, particularly cases where large disc
 
 ```{r hist-disc, echo = FALSE}
 # why not create the figure here?
-# Because we're not evaluating the chunks in this file, the data isn't set up to create them here
-# When I try to run the code below, it gives me an error with the ungroup function, I think for the reason stated above
+# I just needed to change eval = FALSE to echo = FALSE. Since R knits in a fresh session, the required inputs were not available to plot
 
-#df %>%
-#  ungroup() %>%
-#  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
-#  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
-#  geom_histogram() +
-#  scale_x_log10() +
-#  xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
-knitr::include_graphics("Data/hist-disc.jpg")
+df %>%
+ ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 ```
 
 Investigation of these large discrepancies led the team to discover that they tended to occur at certain stops along the route, particularly at the Provo Frontrunner station, as well as at times early in the morning and late at night.
 
-```{r large-discrepancy, eval = FALSE}
+```{r large-discrepancy, echo = FALSE}
 # find places where the discrepancy is large
 (large_discrepancy <- df %>% ungroup() %>%
   arrange(-abs(discrepancy)) %>%
@@ -104,7 +102,7 @@ large_discrepancy %>%
 
 The distribution of discrepancies was shown to improve in normalcy with the omission of headways occurring before 7 PM and after 8 PM. Southbound trips at both the Provo Frontrunner 1 and Provo Frontrunner 2 stops were also omitted since the buses stop twice at the same location in the same direction.
 
-```{r study-df, eval = FALSE}
+```{r study-df, echo = FALSE}
 study_df <- df %>%
   ungroup() %>%
   mutate(
@@ -122,13 +120,12 @@ study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint
 The cleaned dataset had a better distribution of headway discrepancies, as is seen below.
 
 ```{r hist-disc-study, echo = FALSE}
-#study_df %>%
- # mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
-  #ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
-  #geom_histogram() +
-  #scale_x_log10() +
-  #xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
-knitr::include_graphics("Data/hist-disc-study.jpg")
+study_df %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 ```
 
 This data is ready for analysis of headway distributions based off of modifications to TSP strategies.

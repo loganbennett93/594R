@@ -1,7 +1,440 @@
 # Applications
 
-Some _significant_ applications are demonstrated in this chapter.
+```{r setup method, include = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(ANOVAreplication)
+library(multcompView)
+library(knitr)
+```
 
-## Example one
+The timepoint data was **previously analyzed** for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, 
+the distributions of the four thresholds were not the same. Further investigation of the data may explain differences that are seen between TSP thresholds but that do not significantly change the means of their respective distributions. To investigate the effects of TSP thresholds on headway reliability, a number of things can be done, including splitting up the routes by direction and location and performing additional statistical tests on the data to analyze for variation between groups. A preliminary analysis of the data split in that way is shown below.
 
-## Example two
+## Grouped Distributions
+
+A comparison of headway distributions for separate locations and directions of travel may be insightful into the effects of TSP at different points along the UVX route. For this purpose, the route has been partitioned into the following 12 groups. Groups were chosen to capture groups of riders from four separate sections of the route, as well as to address major intersections where TSP may have more of an influence in one of two directions. In order to provide better comparisons of NB and SB routes, the PROVO groups do not include the stops south of Provo Central Station, since they only appear in the SB trips.
+
+|Group|Starting Station|Ending Station|Direction|Number of Stops|Length|
+|----|-----------------|--------------|---------|---------------|------|
+|UVU|Orem Central|Main Street|Both|4|2.50 miles|
+|UVUNB|Main Street|Orem Central|NB|4|2.50 miles|
+|UVUSB|Orem Central|Main Street|SB|4|2.50 miles|
+|UNI|Main Street|Byu Stadium|Both|4|2.80 miles|
+|UNINB|Byu Stadium|Main Street|NB|4|2.80 miles|
+|UNISB|Main Street|Byu Stadium|SB|4|2.80 miles|
+|BYU|Byu Stadium|Academy Square|Both|5|2.35 miles|
+|BYUNB|Academy Square|Byu Stadium|NB|5|2.35 miles|
+|BYUSB|Byu Stadium|Academy Square|SB|5|2.35 miles|
+|PROVO|Academy Square|Provo Central|Both|5|1.85 miles|
+|PROVONB|Provo Central|Academy Square|NB|5|1.85 miles|
+|PROVOSB|Academy Square|Provo Central|SB|5|1.85 miles|
+
+```{r load, echo = FALSE}
+(df <- read_csv(
+  "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  col_types = str_c(rep("c", 24), collapse = "")
+  ))
+```
+
+```{r my_df, echo = FALSE}
+# Where do you read and store the data?
+# I added the code above that shows where my data is stored and where I read it from.
+(df <- df %>%
+  transmute(
+    # Route and direction IDs
+    route = Route, direction = substr(Direction, 0, 2), 
+    trip = Trip,
+    timepoint = `Time Point`,
+    vehicle = Vehicle,
+    
+    # Time points
+    date = as_date(mdy(NEW_Date)),
+    time = as_datetime(str_c(mdy(NEW_Date), " ", DepartureTime)),
+    schedule = as_datetime(str_c(mdy(NEW_Date), " ", Schedule, ":00")),
+    reliability = time - schedule,
+    dwell = as.difftime(str_c("00:", Dwell)),
+    travel = as.difftime(Travel),
+    
+    # change level descriptions for TSP thresholds
+    threshold = factor(Threshold, levels = c("OFF", "5", "2", "ON"), 
+                       labels = c("No TSP", "5 min", "2 min", "Always"))
+  ))
+```
+
+We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.
+
+```{r headway, echo = FALSE}
+df <- df %>%
+  group_by(direction, timepoint) %>%
+  arrange(time, .by_group = TRUE) %>%
+  mutate(
+    hw_actl = time - lead(time),
+    hw_schd = schedule - lead(schedule),
+    discrepancy = hw_schd - hw_actl
+  )
+```
+
+```{r cumdwell, echo = FALSE}
+df <- df %>%
+  group_by(direction, trip, date) %>%
+  arrange(time, .by_group = TRUE) %>%
+  mutate(
+    cumdwell = cumsum(as.numeric(dwell))
+  )
+```
+
+```{r study-df, echo = FALSE}
+study_df <- df %>%
+  ungroup() %>%
+  mutate(
+    hour = lubridate::hour(time),
+    weekday = lubridate::wday(time)
+  ) %>%
+  filter(
+    !weekday %in% c("Saturday", "Sunday"),
+    hour >= 7, hour <= 20
+  )
+
+study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint == "PROVFRST - 2"),]
+```
+
+```{r grouped routes, echo = FALSE}
+
+#Make timepoint data a factor
+study_df$timepoint <- as.factor(study_df$timepoint)
+
+#Create the UVU group from Orem Central to Main St
+UVUvector <- c("OREMFRST", "UVU-CMPS", "LAKEVIEW", "MAIN--ST")
+UVU <- study_df %>%
+  filter(timepoint %in% UVUvector)
+
+#Create UVU NB and UVU SB groups
+UVUNB <- filter(UVU, direction == "NB")
+UVUSB <- filter(UVU, direction == "SB")
+
+#Create the UNI group from Main St to BYU Stadium
+UNIvector <- c("MAIN--ST", "UNIVPLAC", "2230---N", "BYU-STAD")
+UNI <- study_df %>%
+  filter(timepoint %in% UNIvector)
+
+#Create the UNI NB and SB groups
+UNINB <- filter(UNI, direction == "NB")
+UNISB <- filter(UNI, direction == "SB")
+
+#Create the BYU group from BYU Stadium to Academy Square
+BYUvector <- c("BYU-STAD", "BYU----N", "BYU-CMPS", "JOA-QUIN", "ACADSQUR")
+BYU <- study_df %>%
+  filter(timepoint %in% BYUvector)
+
+#Create the BYU NB and SB groups
+BYUNB <- filter(BYU, direction == "NB")
+BYUSB <- filter(BYU, direction == "SB")
+
+#Create the PROVO group from Academy Square to East Bay South
+PROVOvector <- c("ACADSQUR", "300----N", "CNTR--ST", "400----S", "PROVFRST")
+PROVO <- study_df %>%
+  filter(timepoint %in% PROVOvector)
+
+#Create the PROVO NB and SB groups
+PROVONB <- filter(PROVO, direction == "NB")
+PROVOSB <- filter(PROVO, direction == "SB")
+```
+
+Histograms for the separate groups will be created for initial visualization of the data, so as to inspect for differences among the groups. The first four histograms show the UVU, UNI, BYU, and PROVO groups, respectively. The second four histograms show the same groups for NB trips, and the last four show the same groups for the SB trips.
+
+```{r group histograms, echo = FALSE}
+
+#Create UVU histogram
+UVU %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("UVU Route")
+
+#Create UNI histogram
+UNI %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("UNI Route")
+
+#Create BYU histogram
+BYU %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("BYU Route")
+
+#Create PROVO histogram
+PROVO %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("PROVO Route")
+
+#Create UVUNB histogram
+UVUNB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("UVU NB Route")
+
+#Create UNINB histogram
+UNINB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("UNI NB Route")
+
+#Create BYUNB histogram
+BYUNB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("BYU NB Route")
+
+#Create PROVONB histogram
+PROVONB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("PROVO NB Route")
+
+#Create UVUSB histogram
+UVUSB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("UVU SB Route")
+
+#Create UNISB histogram
+UNISB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("UNI SB Route")
+
+#Create BYUSB histogram
+BYUSB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("BYU SB Route")
+
+#Create PROVOSB histogram
+PROVOSB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = discrepancy / 60)) + # convert seconds to minutes
+  geom_histogram() +
+  scale_x_log10() +
+  xlab("Absolute discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("PROVO SB Route")
+```
+
+Inspection of the histograms indicates that the distributions of headway discrepancies for the groups tends to be around 1 minute. There is some variation between the groups, though the distributions appear to be somewhat normal. A table of group means and standard deviations is given below.
+
+```{r groups stats table, echo = FALSE}
+#get the means and standard deviations for each group to display, and reorder according to route
+Fullmeans <- aggregate(data = Fullroutes, Discrepancy ~ Route, FUN = mean)
+a <- c("PROVO", "BYU", "UNI", "UVU")
+Fullmeans <- Fullmeans %>%
+  slice(match(a, Route))
+NBmeans <-  aggregate(data = NBroutes, Discrepancy ~ Route, FUN = mean)
+b <- c("PROVONB", "BYUNB", "UNINB", "UVUNB")
+NBmeans <- NBmeans %>%
+  slice(match(b, Route))
+SBmeans <- aggregate(data = SBroutes, Discrepancy ~ Route, FUN = mean)
+c <- c("PROVOSB", "BYUSB", "UNISB", "UVUSB")
+SBmeans <- SBmeans %>%
+  slice(match(c, Route))
+Fullsd <- aggregate(data = Fullroutes, Discrepancy ~ Route, FUN = sd)
+Fullsd <- Fullsd %>%
+  slice(match(a, Route))
+NBsd <- aggregate(data = NBroutes, Discrepancy ~ Route, FUN = sd)
+NBsd <- NBsd %>%
+  slice(match(b, Route))
+SBsd <- aggregate(data = SBroutes, Discrepancy ~ Route, FUN = sd)
+SBsd <- SBsd %>%
+  slice(match(c, Route))
+
+#Create a dataframe for the means and sd's of each group
+Groupmeans <- as.data.frame(rbind(Fullmeans, NBmeans, SBmeans))
+groupsds <- as.vector(c(Fullsd$Discrepancy, NBsd$Discrepancy, SBsd$Discrepancy))
+Groupsummary <- cbind(Groupmeans, groupsds)
+Groupsummary <- rename(Groupsummary, "Mean" = Discrepancy, "SD" = groupsds)
+
+#create a nice table for the group summary
+kable(Groupsummary)
+```
+
+The results of splitting up the trips by location are expected. There is not a large variation of discrepancies when routes are compared with both their northbound and southbound trips included. This is likely due to the trend seen in the northbound and southbound groups. The mean discrepancy increases in the northbound trips as the buses travel from the start of the trip in Provo towards the end of the trip near UVU. The same trend is seen in the southbound trips from UVU to Provo. The standard deviations of headway discrepancies behave the same way. This indicates the cumulative nature of headway discrepancy. As buses progress along their routes, irregularities tend to compound. This is may be due to problems such as the bunching phenomenon discussed in the literature.
+
+The differences between these groups are difficult to determine visually, but statistical tests can help determine which if any differences are significant. To investigate whether there are differences between the groups, F-tests will be performed to determine if there are significant differences between any of groups. If significant differences are observed, then the Tukey-Kramer procedure for multiple comparisons of unplanned differences will be used to evaluate them.
+
+
+## Tests on Group Distributions
+
+```{r groups df, echo = FALSE}
+#Collect the discrepancy column from each group dataframe as a vector
+UVUdisc <- as.vector(UVU$discrepancy)
+UVUNBdisc <- as.vector(UVUNB$discrepancy)
+UVUSBdisc <- as.vector(UVUSB$discrepancy)
+UNIdisc <- as.vector(UNI$discrepancy)
+UNINBdisc <- as.vector(UNINB$discrepancy)
+UNISBdisc <- as.vector(UNISB$discrepancy)
+BYUdisc <- as.vector(BYU$discrepancy)
+BYUNBdisc <- as.vector(BYUNB$discrepancy)
+BYUSBdisc <- as.vector(BYUSB$discrepancy)
+PROVOdisc <- as.vector(PROVO$discrepancy)
+PROVONBdisc <- as.vector(PROVONB$discrepancy)
+PROVOSBdisc <- as.vector(PROVOSB$discrepancy)
+
+#Create vectors for each of the factor levels (each of the 12 routes)
+
+UVUroute <- rep("UVU", 190149)
+UVUNBroute <- rep("UVUNB", 96854)
+UVUSBroute <- rep("UVUSB", 93295)
+UNIroute <- rep("UNI", 202718)
+UNINBroute <- rep("UNINB", 100875)
+UNISBroute <- rep("UNISB", 101843)
+BYUroute <- rep("BYU", 253374)
+BYUNBroute <- rep("BYUNB", 124976)
+BYUSBroute <- rep("BYUSB", 128398)
+PROVOroute <- rep("PROVO", 217793)
+PROVONBroute <- rep("PROVONB", 115358)
+PROVOSBroute <- rep("PROVOSB", 102435)
+              
+#combine vectors into dataframes for comparing discrepancies (1- compare full routes, 2- compare NB routes, 3- compare SB routes)
+
+#Full routes dataframe
+Fullroutes <- as.data.frame(cbind(c(UVUroute, UNIroute, BYUroute, PROVOroute), c(UVUdisc, UNIdisc, BYUdisc, PROVOdisc))) %>% 
+  rename(Route = V1, Discrepancy = V2)
+Fullroutes$Discrepancy <- as.numeric(Fullroutes$Discrepancy)
+Fullroutes$Route <- as.factor(Fullroutes$Route)
+
+#NB routes dataframe
+NBroutes <- as.data.frame(cbind(c(UVUNBroute, UNINBroute, BYUNBroute, PROVONBroute), c(UVUNBdisc, UNINBdisc, BYUNBdisc, PROVONBdisc))) %>% 
+  rename(Route = V1, Discrepancy = V2)
+NBroutes$Discrepancy <- as.numeric(NBroutes$Discrepancy)
+NBroutes$Route <- as.factor(NBroutes$Route)
+
+#SB routes dataframe
+SBroutes <- as.data.frame(cbind(c(UVUSBroute, UNISBroute, BYUSBroute, PROVOSBroute), c(UVUSBdisc, UNISBdisc, BYUSBdisc, PROVOSBdisc))) %>% 
+  rename(Route = V1, Discrepancy = V2)
+SBroutes$Discrepancy <- as.numeric(SBroutes$Discrepancy)
+SBroutes$Route <- as.factor(SBroutes$Route)
+```
+
+```{r F- tests on group distributions, echo = FALSE}
+#Create a model and perform the F test for the Fullroutes dataframe
+Fullrouteslm <- lm(Discrepancy ~ Route, data = Fullroutes)
+anova(Fullrouteslm)
+#p-value of 0.884- no evidence of a difference
+
+#Create a model and perform the F test for the NBroutes dataframe
+NBrouteslm <- lm(Discrepancy ~ Route, data = NBroutes)
+anova(NBrouteslm)
+#p-value of 0.01114- moderate evidence of a difference
+
+#Create a model and perform the F test for the SBroutes dataframe
+SBrouteslm <- lm(Discrepancy ~ Route, data = SBroutes)
+anova(SBrouteslm)
+#p-value of 0.08066, suggestive but inconclusive evidence of a difference
+```
+
+The F-tests above indicate whether there are differences between mean headway discrepancies of the UVU, UNI, BYU, or PROVO groups when compared to their respective full, NB, or SB counterparts. The tests indicate that when comparing these four sections of the bus route, there is no evidence of a difference between the groups when both their NB and SB trips are combined (*p*-value = 0.884). There is moderate evidence of a difference between at least two of the NB groups (*p*-value = 0.01114). There is suggestive, but inconclusive evidence of a difference between at least two of the SB groups (*p*-value = 0.08066). The differences described here can be seen more clearly in comparative plots of the cumulative headway discrepancy, as shown below.
+
+```{r cumulative headway discrepancy, echo = FALSE}
+#Compare the Full routes
+Fullroutes %>%
+  ungroup() %>%
+  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = Discrepancy / 60, color = Route)) + # convert seconds to minutes
+  stat_ecdf() +
+  scale_x_log10() +
+  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("Full Routes")
+
+#Compare the NB routes
+NBroutes %>%
+  ungroup() %>%
+  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = Discrepancy / 60, color = Route)) + # convert seconds to minutes
+  stat_ecdf() +
+  scale_x_log10() +
+  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("NB Routes")
+
+#Compare the SB routes
+SBroutes %>%
+  ungroup() %>%
+  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = Discrepancy / 60, color = Route)) + # convert seconds to minutes
+  stat_ecdf() +
+  scale_x_log10() +
+  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("SB Routes")
+```
+
+It can easily be seen from the plots that in combining the NB and SB trips for each group (PROVO, BYU, UNI, or UVU), the discrepancies do not vary much, likely due to the opposite effect of compounding irregularities from the trip origin. However, there are some differences between the NB and SB groups that are worth noting. In the plot of the NB routes, there appears to be a fairly even distribution of headway discrepancies along the route. No one group appears to be more influential to the discrepancy, but the discrepancy does increase between all sections when buses travel from Provo to UVU. However, in the plot of the SB routes, the cumulative headway distribution varies less from between the UNI, BYU, and PROVO sections. This indicates that headway deviations are not particularly exacerbated during that portion of the bus trips. This could be due to lower demand in the SB trips past the BYU area, as much of the ridership is likely students traveling between BYU and UVU.
+
+Estimates of the differences in mean headway discrepancy are provided by the Tukey-Kramer procedure for multiple comparisons. Because no significant differences were found for the groups including both NB and SB trips, no estimates for those groups are evaluated. Estimates of the differences for the NB groups and then the SB groups are provided below.
+
+```{r Tukey on group distributions, echo = FALSE}
+#Perform a Tukey-Kramer test of multiple comparisons on the NB routes
+AOVNB <- aov(NBrouteslm)
+TukeyNB <- TukeyHSD(AOVNB)
+TukeyNB
+
+#Perform a Tukey-Kramer test of multiple comparisons on the SB routes
+AOVSB <- aov(SBrouteslm)
+TukeySB <- TukeyHSD(AOVSB)
+TukeySB
+```
+The adjusted *p*-values indicate the significance of differences between groups and, as expected, they are smallest for the sections that are furthest apart from each other (UVUNB-PROVONB and UVUSB-PROVOSB). It is estimated with 95% confidence that the headway discrepancy increases by 1.87 minutes between the PROVO section and the UVU section for NB buses. That difference is estimated as 1.62 minutes for SB traffic. The differences between each adjacent section are also provided above. It should be noted that the differences between PROVO and BYU are estimated with the opposite sign as the other differences due to the fact that it subtracts the northern section's mean from the southern section's mean, whereas all other relationships do the opposite.
+
+These tests give us a glimpse of the differences in headway deviation by location, but further analysis will provide us a clearer idea of the differences at play with regards to TSP modifications.
+
+
+## KS Tests
+
+The Kolmogorov-Smirnov test is a non-parametric test of probability distributions, and can be used with the given dataset to compare samples. 
+
+
