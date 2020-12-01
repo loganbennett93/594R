@@ -24,7 +24,7 @@
 <meta name="author" content="Logan Bennett" />
 
 
-<meta name="date" content="2020-11-24" />
+<meta name="date" content="2020-11-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -53,70 +53,6 @@
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
-<style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -142,8 +78,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1" data-path="methods.html"><a href="methods.html#data"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>4</b> Applications</a><ul>
-<li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>4.1</b> Example one</a></li>
-<li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>4.2</b> Example two</a></li>
+<li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#grouped-distributions"><i class="fa fa-check"></i><b>4.1</b> Grouped Distributions</a></li>
+<li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#statistical-tests-on-grouped-distributions"><i class="fa fa-check"></i><b>4.2</b> statistical Tests on Grouped Distributions</a></li>
+<li class="chapter" data-level="4.3" data-path="applications.html"><a href="applications.html#ks-tests-on-grouped-distributions"><i class="fa fa-check"></i><b>4.3</b> KS Tests on Grouped Distributions</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
 <li class="chapter" data-level="" data-path="literature.html"><a href="literature.html#references"><i class="fa fa-check"></i>References</a></li>
@@ -173,78 +110,91 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="data" class="section level2">
 <h2><span class="header-section-number">3.1</span> Data</h2>
 <p>We created an analysis dataset from UTA’s raw dataset that included timepoint data for all UVX BRT trips from January 2, 2019 to December 30, 2019. The dataset was cleaned and reoriented to reflect data that would be useful in analyzing the distribution of headways over different times of day, locations, and TSP thresholds. We retained within the dataset routes, trips, stops, and vehicles. We simplified the format of these datapoints and created a new variable to hold information regarding reliability, or the difference between scheduled departures and actual departures. we also changed the level descriptions of the TSP thresholds.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="methods.html#cb1-1"></a>(df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(</span>
-<span id="cb1-2"><a href="methods.html#cb1-2"></a>  <span class="st">&quot;UVX_Reliability_2019.csv/UVX_Reliability_2019.csv&quot;</span>,</span>
-<span id="cb1-3"><a href="methods.html#cb1-3"></a>  <span class="dt">col_types =</span> <span class="kw">str_c</span>(<span class="kw">rep</span>(<span class="st">&quot;c&quot;</span>, <span class="dv">24</span>), <span class="dt">collapse =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb1-4"><a href="methods.html#cb1-4"></a>  ))</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="methods.html#cb2-1"></a><span class="co"># Where do you read and store the data?</span></span>
-<span id="cb2-2"><a href="methods.html#cb2-2"></a><span class="co"># I added the code above that shows where my data is stored and where I read it from.</span></span>
-<span id="cb2-3"><a href="methods.html#cb2-3"></a>(df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb2-4"><a href="methods.html#cb2-4"></a><span class="st">  </span><span class="kw">transmute</span>(</span>
-<span id="cb2-5"><a href="methods.html#cb2-5"></a>    <span class="co"># Route and direction IDs</span></span>
-<span id="cb2-6"><a href="methods.html#cb2-6"></a>    <span class="dt">route =</span> Route, <span class="dt">direction =</span> <span class="kw">substr</span>(Direction, <span class="dv">0</span>, <span class="dv">2</span>), </span>
-<span id="cb2-7"><a href="methods.html#cb2-7"></a>    <span class="dt">trip =</span> Trip,</span>
-<span id="cb2-8"><a href="methods.html#cb2-8"></a>    <span class="dt">timepoint =</span> <span class="st">`</span><span class="dt">Time Point</span><span class="st">`</span>,</span>
-<span id="cb2-9"><a href="methods.html#cb2-9"></a>    <span class="dt">vehicle =</span> Vehicle,</span>
-<span id="cb2-10"><a href="methods.html#cb2-10"></a>    </span>
-<span id="cb2-11"><a href="methods.html#cb2-11"></a>    <span class="co"># Time points</span></span>
-<span id="cb2-12"><a href="methods.html#cb2-12"></a>    <span class="dt">date =</span> <span class="kw">as_date</span>(NEW_Date),</span>
-<span id="cb2-13"><a href="methods.html#cb2-13"></a>    <span class="dt">time =</span> <span class="kw">as_datetime</span>(<span class="kw">str_c</span>(NEW_Date, <span class="st">&quot; &quot;</span>, DepartureTime)),</span>
-<span id="cb2-14"><a href="methods.html#cb2-14"></a>    <span class="dt">schedule =</span> <span class="kw">as_datetime</span>(<span class="kw">str_c</span>(NEW_Date, <span class="st">&quot; &quot;</span>, Schedule, <span class="st">&quot;:00&quot;</span>)),</span>
-<span id="cb2-15"><a href="methods.html#cb2-15"></a>    <span class="dt">reliability =</span> time <span class="op">-</span><span class="st"> </span>schedule,</span>
-<span id="cb2-16"><a href="methods.html#cb2-16"></a>    <span class="dt">dwell =</span> <span class="kw">as.difftime</span>(<span class="kw">str_c</span>(<span class="st">&quot;00:&quot;</span>, Dwell)),</span>
-<span id="cb2-17"><a href="methods.html#cb2-17"></a>    <span class="dt">travel =</span> <span class="kw">as.difftime</span>(Travel),</span>
-<span id="cb2-18"><a href="methods.html#cb2-18"></a>    </span>
-<span id="cb2-19"><a href="methods.html#cb2-19"></a>    <span class="co"># change level descriptions for TSP thresholds</span></span>
-<span id="cb2-20"><a href="methods.html#cb2-20"></a>    <span class="dt">threshold =</span> <span class="kw">factor</span>(Threshold, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;OFF&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;ON&quot;</span>), </span>
-<span id="cb2-21"><a href="methods.html#cb2-21"></a>                       <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;No TSP&quot;</span>, <span class="st">&quot;5 min&quot;</span>, <span class="st">&quot;2 min&quot;</span>, <span class="st">&quot;Always&quot;</span>))</span>
-<span id="cb2-22"><a href="methods.html#cb2-22"></a>  ))</span></code></pre></div>
+<pre><code>## # A tibble: 1,015,863 x 24
+##    NEW_Date Block Trip  Vehicle Route Direction `Time Point` Schedule
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;   
+##  1 1/2/19   2400  04:17 17110   830X  NB TO OR~ PROVFRST     04:17   
+##  2 1/2/19   2400  04:17 17110   830X  NB TO OR~ 400----S     04:19   
+##  3 1/2/19   2400  04:17 17110   830X  NB TO OR~ CNTR--ST     04:20   
+##  4 1/2/19   2400  04:17 17110   830X  NB TO OR~ 300----N     04:21   
+##  5 1/2/19   2400  04:17 17110   830X  NB TO OR~ ACADSQUR     04:22   
+##  6 1/2/19   2400  04:17 17110   830X  NB TO OR~ JOA-QUIN     04:24   
+##  7 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU-CMPS     04:26   
+##  8 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU----N     04:28   
+##  9 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU-STAD     04:29   
+## 10 1/2/19   2400  04:17 17110   830X  NB TO OR~ 2230---N     04:31   
+## # ... with 1,015,853 more rows, and 16 more variables: DepartureTime &lt;chr&gt;,
+## #   Status &lt;chr&gt;, Reliability &lt;chr&gt;, Dwell &lt;chr&gt;, Travel &lt;chr&gt;, Hour &lt;chr&gt;,
+## #   Headway &lt;chr&gt;, REL_sec &lt;chr&gt;, `TT+Dwe;;_sec` &lt;chr&gt;, Dwell_sec &lt;chr&gt;,
+## #   TT_sec &lt;chr&gt;, `tot TT+Dwell_sec` &lt;chr&gt;, `TP #` &lt;chr&gt;, Threshold &lt;chr&gt;,
+## #   ChangeDay &lt;chr&gt;, Peak &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 1,015,863 x 12
+##    route direction trip  timepoint vehicle date       time               
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;date&gt;     &lt;dttm&gt;             
+##  1 830X  NB        04:17 PROVFRST  17110   2019-01-02 2019-01-02 04:17:29
+##  2 830X  NB        04:17 400----S  17110   2019-01-02 2019-01-02 04:19:48
+##  3 830X  NB        04:17 CNTR--ST  17110   2019-01-02 2019-01-02 04:20:42
+##  4 830X  NB        04:17 300----N  17110   2019-01-02 2019-01-02 04:21:29
+##  5 830X  NB        04:17 ACADSQUR  17110   2019-01-02 2019-01-02 04:22:18
+##  6 830X  NB        04:17 JOA-QUIN  17110   2019-01-02 2019-01-02 04:24:10
+##  7 830X  NB        04:17 BYU-CMPS  17110   2019-01-02 2019-01-02 04:25:43
+##  8 830X  NB        04:17 BYU----N  17110   2019-01-02 2019-01-02 04:28:23
+##  9 830X  NB        04:17 BYU-STAD  17110   2019-01-02 2019-01-02 04:29:15
+## 10 830X  NB        04:17 2230---N  17110   2019-01-02 2019-01-02 04:31:22
+## # ... with 1,015,853 more rows, and 5 more variables: schedule &lt;dttm&gt;,
+## #   reliability &lt;drtn&gt;, dwell &lt;drtn&gt;, travel &lt;drtn&gt;, threshold &lt;fct&gt;</code></pre>
 <p>We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="methods.html#cb3-1"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb3-2"><a href="methods.html#cb3-2"></a><span class="st">  </span><span class="kw">group_by</span>(direction, timepoint) <span class="op">%&gt;%</span></span>
-<span id="cb3-3"><a href="methods.html#cb3-3"></a><span class="st">  </span><span class="kw">arrange</span>(time, <span class="dt">.by_group =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb3-4"><a href="methods.html#cb3-4"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb3-5"><a href="methods.html#cb3-5"></a>    <span class="dt">hw_actl =</span> time <span class="op">-</span><span class="st"> </span><span class="kw">lead</span>(time),</span>
-<span id="cb3-6"><a href="methods.html#cb3-6"></a>    <span class="dt">hw_schd =</span> schedule <span class="op">-</span><span class="st"> </span><span class="kw">lead</span>(schedule),</span>
-<span id="cb3-7"><a href="methods.html#cb3-7"></a>    <span class="dt">discrepancy =</span> hw_schd <span class="op">-</span><span class="st"> </span>hw_actl</span>
-<span id="cb3-8"><a href="methods.html#cb3-8"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="methods.html#cb4-1"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb4-2"><a href="methods.html#cb4-2"></a><span class="st">  </span><span class="kw">group_by</span>(direction, trip, date) <span class="op">%&gt;%</span></span>
-<span id="cb4-3"><a href="methods.html#cb4-3"></a><span class="st">  </span><span class="kw">arrange</span>(time, <span class="dt">.by_group =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-4"><a href="methods.html#cb4-4"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb4-5"><a href="methods.html#cb4-5"></a>    <span class="dt">cumdwell =</span> <span class="kw">cumsum</span>(<span class="kw">as.numeric</span>(dwell))</span>
-<span id="cb4-6"><a href="methods.html#cb4-6"></a>  )</span></code></pre></div>
 <p>The team noticed some data integrity issues, particularly cases where large discrepancies between scheduled and actual headway were taking place. Those outliers can be seen below.</p>
-<p><img src="Data/hist-disc.jpg" width="1094" /></p>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 35 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="594R_files/figure-html/hist-disc-1.png" width="672" /></p>
 <p>Investigation of these large discrepancies led the team to discover that they tended to occur at certain stops along the route, particularly at the Provo Frontrunner station, as well as at times early in the morning and late at night.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="methods.html#cb5-1"></a><span class="co"># find places where the discrepancy is large</span></span>
-<span id="cb5-2"><a href="methods.html#cb5-2"></a>(large_discrepancy &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb5-3"><a href="methods.html#cb5-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span><span class="kw">abs</span>(discrepancy)) <span class="op">%&gt;%</span></span>
-<span id="cb5-4"><a href="methods.html#cb5-4"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">abs</span>(discrepancy) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1000</span>) <span class="op">%&gt;%</span></span>
-<span id="cb5-5"><a href="methods.html#cb5-5"></a><span class="st">  </span><span class="kw">select</span>(direction, trip, timepoint, time, discrepancy))</span>
-<span id="cb5-6"><a href="methods.html#cb5-6"></a></span>
-<span id="cb5-7"><a href="methods.html#cb5-7"></a>large_discrepancy <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-8"><a href="methods.html#cb5-8"></a><span class="st">  </span><span class="kw">group_by</span>(timepoint) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-9"><a href="methods.html#cb5-9"></a><span class="st">  </span><span class="kw">tally</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span>
-<span id="cb5-10"><a href="methods.html#cb5-10"></a></span>
-<span id="cb5-11"><a href="methods.html#cb5-11"></a>large_discrepancy <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-12"><a href="methods.html#cb5-12"></a><span class="st">  </span><span class="kw">group_by</span>(trip) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-13"><a href="methods.html#cb5-13"></a><span class="st">  </span><span class="kw">tally</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span></code></pre></div>
+<pre><code>## # A tibble: 1,056 x 5
+##    direction trip  timepoint    time                discrepancy
+##    &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;        &lt;dttm&gt;              &lt;drtn&gt;     
+##  1 SB        22:55 PROVFRST - 2 2019-07-16 23:58:35 -87100 secs
+##  2 SB        23:10 PROVFRST - 2 2019-10-18 00:00:52  86387 secs
+##  3 SB        23:10 TOWNCNTR - 2 2019-07-31 00:01:25  86236 secs
+##  4 SB        23:10 PROVFRST - 2 2019-09-27 00:00:04  86229 secs
+##  5 SB        23:10 PROVFRST - 2 2019-07-31 00:03:51  86204 secs
+##  6 SB        23:09 PROVFRST - 2 2019-01-23 00:00:00  86170 secs
+##  7 SB        23:10 PROVFRST - 2 2019-11-15 23:56:39 -86164 secs
+##  8 SB        23:10 PROVFRST - 2 2019-10-09 00:00:46  86147 secs
+##  9 SB        22:25 PROVFRST - 2 2019-10-29 23:12:21 -86146 secs
+## 10 SB        23:10 PROVFRST - 2 2019-09-26 23:55:45 -86141 secs
+## # ... with 1,046 more rows</code></pre>
+<pre><code>## # A tibble: 21 x 2
+##    timepoint        n
+##    &lt;chr&gt;        &lt;int&gt;
+##  1 PROVFRST - 1   242
+##  2 UVU-CMPS       107
+##  3 OREMFRST        67
+##  4 PROVFRST        58
+##  5 LAKEVIEW        54
+##  6 BYU-CMPS        47
+##  7 PROVFRST - 2    45
+##  8 400----S        43
+##  9 MAIN--ST        43
+## 10 BYU----N        42
+## # ... with 11 more rows</code></pre>
+<pre><code>## # A tibble: 205 x 2
+##    trip      n
+##    &lt;chr&gt; &lt;int&gt;
+##  1 06:17   114
+##  2 24:19    98
+##  3 00:19    52
+##  4 23:19    46
+##  5 00:52    44
+##  6 07:04    33
+##  7 24:51    31
+##  8 23:10    28
+##  9 00:10    23
+## 10 06:53    16
+## # ... with 195 more rows</code></pre>
 <p>The distribution of discrepancies was shown to improve in normalcy with the omission of headways occurring before 7 PM and after 8 PM. Southbound trips at both the Provo Frontrunner 1 and Provo Frontrunner 2 stops were also omitted since the buses stop twice at the same location in the same direction.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="methods.html#cb6-1"></a>study_df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb6-2"><a href="methods.html#cb6-2"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb6-3"><a href="methods.html#cb6-3"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb6-4"><a href="methods.html#cb6-4"></a>    <span class="dt">hour =</span> lubridate<span class="op">::</span><span class="kw">hour</span>(time),</span>
-<span id="cb6-5"><a href="methods.html#cb6-5"></a>    <span class="dt">weekday =</span> lubridate<span class="op">::</span><span class="kw">wday</span>(time)</span>
-<span id="cb6-6"><a href="methods.html#cb6-6"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb6-7"><a href="methods.html#cb6-7"></a><span class="st">  </span><span class="kw">filter</span>(</span>
-<span id="cb6-8"><a href="methods.html#cb6-8"></a>    <span class="op">!</span>weekday <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Saturday&quot;</span>, <span class="st">&quot;Sunday&quot;</span>),</span>
-<span id="cb6-9"><a href="methods.html#cb6-9"></a>    hour <span class="op">&gt;=</span><span class="st"> </span><span class="dv">7</span>, hour <span class="op">&lt;=</span><span class="st"> </span><span class="dv">20</span></span>
-<span id="cb6-10"><a href="methods.html#cb6-10"></a>  )</span>
-<span id="cb6-11"><a href="methods.html#cb6-11"></a></span>
-<span id="cb6-12"><a href="methods.html#cb6-12"></a>study_df &lt;-<span class="st"> </span>study_df[<span class="op">!</span>(study_df<span class="op">$</span>timepoint <span class="op">==</span><span class="st"> &quot;PROVFRST - 1&quot;</span> <span class="op">|</span><span class="st"> </span>study_df<span class="op">$</span>timepoint <span class="op">==</span><span class="st"> &quot;PROVFRST - 2&quot;</span>),]</span></code></pre></div>
 <p>The cleaned dataset had a better distribution of headway discrepancies, as is seen below.</p>
-<p><img src="Data/hist-disc-study.jpg" width="1094" /></p>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="594R_files/figure-html/hist-disc-study-1.png" width="672" /></p>
 <p>This data is ready for analysis of headway distributions based off of modifications to TSP strategies.</p>
 
 </div>
