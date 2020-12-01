@@ -309,7 +309,7 @@ The results of splitting up the trips by location are expected. There is not a l
 The differences between these groups are difficult to determine visually, but statistical tests can help determine which if any differences are significant. To investigate whether there are differences between the groups, F-tests will be performed to determine if there are significant differences between any of groups. If significant differences are observed, then the Tukey-Kramer procedure for multiple comparisons of unplanned differences will be used to evaluate them.
 
 
-## Tests on Group Distributions
+## statistical Tests on Grouped Distributions
 
 ```{r groups df, echo = FALSE}
 #Collect the discrepancy column from each group dataframe as a vector
@@ -433,8 +433,42 @@ The adjusted *p*-values indicate the significance of differences between groups 
 These tests give us a glimpse of the differences in headway deviation by location, but further analysis will provide us a clearer idea of the differences at play with regards to TSP modifications.
 
 
-## KS Tests
+## KS Tests on Grouped Distributions
 
-The Kolmogorov-Smirnov test is a non-parametric test of probability distributions, and can be used with the given dataset to compare samples. 
+The Kolmogorov-Smirnov test is a non-parametric test of probability distributions, and can be used with the given dataset to compare groups. We will first compare the cumulative distributions of headway discrepancy for the NB and SB trips, since differences based on direction have previously been identified. Plots of the NB and SB cumulative headway discrepancies are shown below.
+
+```{r cumulative headway by direction, echo = FALSE}
+#Show the cumulative distribution of the NB routes
+NBroutes %>%
+  ungroup() %>%
+  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = Discrepancy / 60)) + # convert seconds to minutes
+  stat_ecdf() +
+  scale_x_log10() +
+  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("NB Routes")
+
+#Show the cumulative distribution of the SB routes
+SBroutes %>%
+  ungroup() %>%
+  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = Discrepancy / 60)) + # convert seconds to minutes
+  stat_ecdf() +
+  scale_x_log10() +
+  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
+  ggtitle("SB Routes")
+```
+
+
+```{r KS tests, echo = FALSE}
+#I am a little unsure of how to use the ks test. I want to show comparisons between the cumulative distributions of headways I believe.
+#I am a little lost as to how to incorporate the TSP thresholds into my analysis.
+#Below is a ks test comparing the NB cumulative distribution to he SB cumulative distribution
+ks.test(NBroutes$Discrepancy, SBroutes$Discrepancy)
+```
+The test performed above compares the two cumulative distribution plots shown. The extremely small *p*-value of 2.2e-16 indicates with convincing evidence that the the NB discrepancies and SB discrepancies were not drawn from the same continuous distribution, and are significantly different.
+
+
+**Further analysis needs to be done regarding TSP thresholds, since I was unsure of how to fit them into this analysis. I hope to meet with Dr. Macfarlane sometime this week to go over the work I've done and receive clarification on some tests so I can make the necessary modifications.**
 
 
