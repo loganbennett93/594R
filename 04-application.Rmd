@@ -270,47 +270,6 @@ PROVOSB %>%
 
 Inspection of the histograms indicates that the distributions of headway discrepancies for the groups tends to be around 1 minute. There is some variation between the groups, though the distributions appear to be somewhat normal. A table of group means and standard deviations is given below.
 
-```{r groups stats table, echo = FALSE}
-#get the means and standard deviations for each group to display, and reorder according to route
-Fullmeans <- aggregate(data = Fullroutes, Discrepancy ~ Route, FUN = mean)
-a <- c("PROVO", "BYU", "UNI", "UVU")
-Fullmeans <- Fullmeans %>%
-  slice(match(a, Route))
-NBmeans <-  aggregate(data = NBroutes, Discrepancy ~ Route, FUN = mean)
-b <- c("PROVONB", "BYUNB", "UNINB", "UVUNB")
-NBmeans <- NBmeans %>%
-  slice(match(b, Route))
-SBmeans <- aggregate(data = SBroutes, Discrepancy ~ Route, FUN = mean)
-c <- c("PROVOSB", "BYUSB", "UNISB", "UVUSB")
-SBmeans <- SBmeans %>%
-  slice(match(c, Route))
-Fullsd <- aggregate(data = Fullroutes, Discrepancy ~ Route, FUN = sd)
-Fullsd <- Fullsd %>%
-  slice(match(a, Route))
-NBsd <- aggregate(data = NBroutes, Discrepancy ~ Route, FUN = sd)
-NBsd <- NBsd %>%
-  slice(match(b, Route))
-SBsd <- aggregate(data = SBroutes, Discrepancy ~ Route, FUN = sd)
-SBsd <- SBsd %>%
-  slice(match(c, Route))
-
-#Create a dataframe for the means and sd's of each group
-Groupmeans <- as.data.frame(rbind(Fullmeans, NBmeans, SBmeans))
-groupsds <- as.vector(c(Fullsd$Discrepancy, NBsd$Discrepancy, SBsd$Discrepancy))
-Groupsummary <- cbind(Groupmeans, groupsds)
-Groupsummary <- rename(Groupsummary, "Mean" = Discrepancy, "SD" = groupsds)
-
-#create a nice table for the group summary
-kable(Groupsummary)
-```
-
-The results of splitting up the trips by location are expected. There is not a large variation of discrepancies when routes are compared with both their northbound and southbound trips included. This is likely due to the trend seen in the northbound and southbound groups. The mean discrepancy increases in the northbound trips as the buses travel from the start of the trip in Provo towards the end of the trip near UVU. The same trend is seen in the southbound trips from UVU to Provo. The standard deviations of headway discrepancies behave the same way. This indicates the cumulative nature of headway discrepancy. As buses progress along their routes, irregularities tend to compound. This is may be due to problems such as the bunching phenomenon discussed in the literature.
-
-The differences between these groups are difficult to determine visually, but statistical tests can help determine which if any differences are significant. To investigate whether there are differences between the groups, F-tests will be performed to determine if there are significant differences between any of groups. If significant differences are observed, then the Tukey-Kramer procedure for multiple comparisons of unplanned differences will be used to evaluate them.
-
-
-## statistical Tests on Grouped Distributions
-
 ```{r groups df, echo = FALSE}
 #Collect the discrepancy column from each group dataframe as a vector
 UVUdisc <- as.vector(UVU$discrepancy)
@@ -361,6 +320,49 @@ SBroutes <- as.data.frame(cbind(c(UVUSBroute, UNISBroute, BYUSBroute, PROVOSBrou
 SBroutes$Discrepancy <- as.numeric(SBroutes$Discrepancy)
 SBroutes$Route <- as.factor(SBroutes$Route)
 ```
+
+```{r groups stats table, echo = FALSE}
+#get the means and standard deviations for each group to display, and reorder according to route
+Fullmeans <- aggregate(data = Fullroutes, Discrepancy ~ Route, FUN = mean)
+a <- c("PROVO", "BYU", "UNI", "UVU")
+Fullmeans <- Fullmeans %>%
+  slice(match(a, Route))
+NBmeans <-  aggregate(data = NBroutes, Discrepancy ~ Route, FUN = mean)
+b <- c("PROVONB", "BYUNB", "UNINB", "UVUNB")
+NBmeans <- NBmeans %>%
+  slice(match(b, Route))
+SBmeans <- aggregate(data = SBroutes, Discrepancy ~ Route, FUN = mean)
+c <- c("PROVOSB", "BYUSB", "UNISB", "UVUSB")
+SBmeans <- SBmeans %>%
+  slice(match(c, Route))
+Fullsd <- aggregate(data = Fullroutes, Discrepancy ~ Route, FUN = sd)
+Fullsd <- Fullsd %>%
+  slice(match(a, Route))
+NBsd <- aggregate(data = NBroutes, Discrepancy ~ Route, FUN = sd)
+NBsd <- NBsd %>%
+  slice(match(b, Route))
+SBsd <- aggregate(data = SBroutes, Discrepancy ~ Route, FUN = sd)
+SBsd <- SBsd %>%
+  slice(match(c, Route))
+
+#Create a dataframe for the means and sd's of each group
+Groupmeans <- as.data.frame(rbind(Fullmeans, NBmeans, SBmeans))
+groupsds <- as.vector(c(Fullsd$Discrepancy, NBsd$Discrepancy, SBsd$Discrepancy))
+Groupsummary <- cbind(Groupmeans, groupsds)
+Groupsummary <- rename(Groupsummary, "Mean" = Discrepancy, "SD" = groupsds)
+
+#create a nice table for the group summary
+kable(Groupsummary)
+```
+
+The results of splitting up the trips by location are expected. There is not a large variation of discrepancies when routes are compared with both their northbound and southbound trips included. This is likely due to the trend seen in the northbound and southbound groups. The mean discrepancy increases in the northbound trips as the buses travel from the start of the trip in Provo towards the end of the trip near UVU. The same trend is seen in the southbound trips from UVU to Provo. The standard deviations of headway discrepancies behave the same way. This indicates the cumulative nature of headway discrepancy. As buses progress along their routes, irregularities tend to compound. This is may be due to problems such as the bunching phenomenon discussed in the literature.
+
+The differences between these groups are difficult to determine visually, but statistical tests can help determine which if any differences are significant. To investigate whether there are differences between the groups, F-tests will be performed to determine if there are significant differences between any of groups. If significant differences are observed, then the Tukey-Kramer procedure for multiple comparisons of unplanned differences will be used to evaluate them.
+
+
+## statistical Tests on Grouped Distributions
+
+The results of F-tests run to compare the full routes, NB routes, and SB routes are shown below.
 
 ```{r F- tests on group distributions, echo = FALSE}
 #Create a model and perform the F test for the Fullroutes dataframe
@@ -470,5 +472,3 @@ The test performed above compares the two cumulative distribution plots shown. T
 
 
 **Further analysis needs to be done regarding TSP thresholds, since I was unsure of how to fit them into this analysis. I hope to meet with Dr. Macfarlane sometime this week to go over the work I've done and receive clarification on some tests so I can make the necessary modifications.**
-
-

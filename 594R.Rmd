@@ -96,7 +96,7 @@ library(lubridate)
 
 ```{r load, echo = FALSE}
 (df <- read_csv(
-  "UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
   col_types = str_c(rep("c", 24), collapse = "")
   ))
 ```
@@ -685,8 +685,6 @@ The test performed above compares the two cumulative distribution plots shown. T
 
 
 **Further analysis needs to be done regarding TSP thresholds, since I was unsure of how to fit them into this analysis. I hope to meet with Dr. Macfarlane sometime this week to go over the work I've done and receive clarification on some tests so I can make the necessary modifications.**
-
-
 
 <!--chapter:end:04-application.Rmd-->
 
