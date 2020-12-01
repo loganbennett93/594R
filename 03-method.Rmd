@@ -15,7 +15,7 @@ library(lubridate)
 
 ```{r load, echo = FALSE}
 (df <- read_csv(
-  "UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
   col_types = str_c(rep("c", 24), collapse = "")
   ))
 ```

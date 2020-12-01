@@ -247,14 +247,14 @@ A comparison of headway distributions for separate locations and directions of t
 |PROVONB|Provo Central|Academy Square|NB|5|1.85 miles|
 |PROVOSB|Academy Square|Provo Central|SB|5|1.85 miles|
 
-```{r load, echo = FALSE}
+```{r load 4, echo = FALSE}
 (df <- read_csv(
   "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
   col_types = str_c(rep("c", 24), collapse = "")
   ))
 ```
 
-```{r my_df, echo = FALSE}
+```{r my_df 4, echo = FALSE}
 # Where do you read and store the data?
 # I added the code above that shows where my data is stored and where I read it from.
 (df <- df %>%
