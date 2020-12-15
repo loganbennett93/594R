@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
 # Applications
 
 ```{r setup method 4, include = FALSE}
@@ -11,28 +16,10 @@ library(knitr)
 ```
 
 The timepoint data was **previously analyzed** for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, 
-the distributions of the four thresholds were not the same. Further investigation of the data may explain differences that are seen between TSP thresholds but that do not significantly change the means of their respective distributions. To investigate the effects of TSP thresholds on headway reliability, a number of things can be done, including splitting up the routes by direction and location and performing additional statistical tests on the data to analyze for variation between groups. A preliminary analysis of the data split in that way is shown below.
-
-## Grouped Distributions
-
-A comparison of headway distributions for separate locations and directions of travel may be insightful into the effects of TSP at different points along the UVX route. For this purpose, the route has been partitioned into the following 12 groups. Groups were chosen to capture groups of riders from four separate sections of the route, as well as to address major intersections where TSP may have more of an influence in one of two directions. In order to provide better comparisons of NB and SB routes, the PROVO groups do not include the stops south of Provo Central Station, since they only appear in the SB trips.
-
-|Group|Starting Station|Ending Station|Direction|Number of Stops|Length|
-|----|-----------------|--------------|---------|---------------|------|
-|UVU|Orem Central|Main Street|Both|4|2.50 miles|
-|UVUNB|Main Street|Orem Central|NB|4|2.50 miles|
-|UVUSB|Orem Central|Main Street|SB|4|2.50 miles|
-|UNI|Main Street|Byu Stadium|Both|4|2.80 miles|
-|UNINB|Byu Stadium|Main Street|NB|4|2.80 miles|
-|UNISB|Main Street|Byu Stadium|SB|4|2.80 miles|
-|BYU|Byu Stadium|Academy Square|Both|5|2.35 miles|
-|BYUNB|Academy Square|Byu Stadium|NB|5|2.35 miles|
-|BYUSB|Byu Stadium|Academy Square|SB|5|2.35 miles|
-|PROVO|Academy Square|Provo Central|Both|5|1.85 miles|
-|PROVONB|Provo Central|Academy Square|NB|5|1.85 miles|
-|PROVOSB|Academy Square|Provo Central|SB|5|1.85 miles|
+the distributions of the four thresholds were not the same. That brief analysis is shown below.
 
 ```{r load 4, echo = FALSE}
+#Download data from data file
 (df <- read_csv(
   "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
   col_types = str_c(rep("c", 24), collapse = "")
@@ -40,8 +27,6 @@ A comparison of headway distributions for separate locations and directions of t
 ```
 
 ```{r my_df 4, echo = FALSE}
-# Where do you read and store the data?
-# I added the code above that shows where my data is stored and where I read it from.
 (df <- df %>%
   transmute(
     # Route and direction IDs
@@ -63,8 +48,6 @@ A comparison of headway distributions for separate locations and directions of t
                        labels = c("No TSP", "5 min", "2 min", "Always"))
   ))
 ```
-
-We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.
 
 ```{r headway 4, echo = FALSE}
 df <- df %>%
@@ -100,6 +83,67 @@ study_df <- df %>%
 
 study_df <- study_df[!(study_df$timepoint == "PROVFRST - 1" | study_df$timepoint == "PROVFRST - 2"),]
 ```
+
+```{r recreate previous analysis, echo = FALSE}
+#Show that distributions headway discrepancy grouped by TSP threshold are different
+#Create dataframes for each TSP threshold
+fivemindf <- filter(study_df, threshold == "5 min")
+twomindf <- filter(study_df, threshold == "2 min")
+notspdf <- filter(study_df, threshold == "No TSP")
+alwaysdf <- filter(study_df, threshold == "Always")
+
+#Create histograms of headway discrepancy for each TSP threshold (update x axes to be same)
+ggplot(fivemindf, aes(x = discrepancy / 60)) +
+         geom_histogram(binwidth = 2) +
+          xlim(-25, 25) +
+          labs(x = "Headway Discrepancy (minutes)", title = "Headway Discrepancy Distribution for '5 Min' Threshold")
+
+ggplot(twomindf, aes(x = discrepancy / 60)) +
+         geom_histogram(binwidth = 2) +
+          xlim(-25, 25) +
+          labs(x = "Headway Discrepancy (minutes)", title = "Headway Discrepancy Distribution for '2 Min' Threshold")
+
+ggplot(notspdf, aes(x = discrepancy / 60)) +
+         geom_histogram(binwidth = 2) +
+          xlim(-25, 25) +
+          labs(x = "Headway Discrepancy (minutes)", title = "Headway Discrepancy Distribution for 'No TSP' Threshold")
+
+ggplot(alwaysdf, aes(x = discrepancy / 60)) +
+         geom_histogram(binwidth = 2) +
+          xlim(-25, 25) +
+          labs(x = "Headway Discrepancy (minutes)", title = "Headway Discrepancy Distribution for 'ALWAYS' Threshold")
+```
+
+The histograms above show that comparison of headway discrepancy for the respective TSP thresholds considered across the entire bus route yields little visual implication of a difference in distributions. The only noticeable difference between the distributions are the frequencies of headway discrepancies for the respective thresholds due to the varying lengths of time that each was in effect. A one-way ANOVA indicates that the means of these distributions are not significantly different, as shown below.
+
+```{r}
+#Use t-tests to show that in spite of distributions, means are not statistically different (t-tests or ANOVA proving Tukey isn't necessary)
+lmtsp <- lm(discrepancy ~ threshold, data = study_df)
+anova(lmtsp)
+```
+An *F*-test of the headway discrepancy as a function of TSP thresholds indicates a large *p*-value of 0.2815, which provides no evidence that there is a difference in mean discrepancy between the thresholds when considered in the context of the entire route.
+
+Further investigation of the data may explain differences that are seen between TSP thresholds but that do not significantly change the means of their respective distributions. To investigate the effects of TSP thresholds on headway reliability, a number of things can be done, including splitting up the routes by direction and location and performing additional statistical tests on the data to analyze for variation between groups. A preliminary analysis of the data split in that way is shown below.
+
+## Grouped Distributions
+
+A comparison of headway distributions for separate locations and directions of travel may be insightful into the effects of TSP at different points along the UVX route. For this purpose, the route has been partitioned into the following 12 groups. Groups were chosen to capture groups of riders from four separate sections of the route, as well as to address major intersections where TSP may have more of an influence in one of two directions. In order to provide better comparisons of NB and SB routes, the PROVO groups do not include the stops south of Provo Central Station, since they only appear in the SB trips.
+
+|Group|Starting Station|Ending Station|Direction|Number of Stops|Length|
+|----|-----------------|--------------|---------|---------------|------|
+|UVU|Orem Central|Main Street|Both|4|2.50 miles|
+|UVUNB|Main Street|Orem Central|NB|4|2.50 miles|
+|UVUSB|Orem Central|Main Street|SB|4|2.50 miles|
+|UNI|Main Street|Byu Stadium|Both|4|2.80 miles|
+|UNINB|Byu Stadium|Main Street|NB|4|2.80 miles|
+|UNISB|Main Street|Byu Stadium|SB|4|2.80 miles|
+|BYU|Byu Stadium|Academy Square|Both|5|2.35 miles|
+|BYUNB|Academy Square|Byu Stadium|NB|5|2.35 miles|
+|BYUSB|Byu Stadium|Academy Square|SB|5|2.35 miles|
+|PROVO|Academy Square|Provo Central|Both|5|1.85 miles|
+|PROVONB|Provo Central|Academy Square|NB|5|1.85 miles|
+|PROVOSB|Academy Square|Provo Central|SB|5|1.85 miles|
+
 
 ```{r grouped routes, echo = FALSE}
 
