@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Methods
 
 We modified a dataset provided by Utah Transit Authority (UTA) to verify the affects of several TSP strategies on headway variation of the UVX BRT system. This BRT system is a 10 mile line between Provo and Orem and was open for public use as of January 9, 2019. The demographics of this area are particularly marked by the presence of two large universities in the area, Brigham Young University in Provo and Utah Valley University in Orem. With over 30,000 students in enrolled in each respective institution each year, a great deal of traffic demand is created between students traveling to and from school, especially considering the fact that housing and job demands are driven by students. For this reason there is a decent amount of UVU students who live in Provo, and the need to make the Provo-Orem commute causes considerable delay during peak hours. In conjunction with servicing other demographics of the population, servicing student needs was a large factor in the decision to implement a BRT system in this area.
@@ -11,6 +16,7 @@ knitr::opts_chunk$set(cache = TRUE)
 library(tidyverse)
 library(readxl)
 library(lubridate)
+library(modelsummary)
 ```
 
 ```{r load, echo = FALSE}
@@ -128,4 +134,40 @@ study_df %>%
   xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 ```
 
-This data is ready for analysis of headway distributions based off of modifications to TSP strategies.
+This data is ready for analysis of headway distributions based off of modifications to TSP strategies. Tables showing descriptive statistics of the data set is shown below. A breakdown of the TSP thresholds is first shown along with a timeline of when each threshold was in effect, followed by a table of descriptive statistics for a number of the data elements. It appears from the data that there were transition periods between when threshold levels were in effect.
+
+```{r descriptive TSP data table, echo = FALSE}
+#Distribution of TSP thresholds
+datasummary_skim(study_df %>% select(threshold), type = "categorical", title = "Distribution of UVX TSP Thresholds")
+
+#Table of dates of each threshold
+```
+
+|Start Date|End Date|Threshold|
+|----------|--------|--------|
+|January 2, 2019|June 7, 2019|5 min|
+|June 8, 2019|June 9, 2019|No data|
+|June 10, 2019|July 12, 2019|2 min|
+|July 13, 2019|July 14, 2019|No data|
+|July 15, 2019|July 26, 2019|No TSP|
+|July 27, 2019|July 28, 2019|No data|
+|July 29, 2019|July 29, 2019|N/A|
+|July 30, 2019|August 9, 2019|Always|
+|August 10, 2019|August 11, 2019|No data|
+|August 12, 2019|December 30, 2019|2 min|
+
+```{r descriptive statistics, echo = FALSE}
+#Convert data to numeric
+study_df$reliability <- as.numeric(study_df$reliability)
+study_df$dwell <- as.numeric(study_df$dwell)
+study_df$travel <- as.numeric(study_df$travel)
+study_df$hw_actl <- as.numeric(study_df$hw_actl)
+study_df$hw_schd <- as.numeric(study_df$hw_schd)
+study_df$discrepancy <- as.numeric(study_df$discrepancy)
+study_df$cumdwell <- as.numeric(study_df$cumdwell)
+
+#Table of statistics on numeric variables
+
+datasummary_skim(study_df, type = "numeric", title = "UVX Timepoint Data")
+```
+
