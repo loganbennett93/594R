@@ -20,15 +20,14 @@ library(modelsummary)
 ```
 
 ```{r load, echo = FALSE}
+#Download data from data folder
 (df <- read_csv(
-  "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  "Data/UVX_Reliability_2019.zip",
   col_types = str_c(rep("c", 24), collapse = "")
   ))
 ```
 
 ```{r my_df, echo = FALSE}
-# Where do you read and store the data?
-# I added the code above that shows where my data is stored and where I read it from.
 (df <- df %>%
   transmute(
     # Route and direction IDs
@@ -76,9 +75,6 @@ df <- df %>%
 The team noticed some data integrity issues, particularly cases where large discrepancies between scheduled and actual headway were taking place. Those outliers can be seen below.
 
 ```{r hist-disc, echo = FALSE}
-# why not create the figure here?
-# I just needed to change eval = FALSE to echo = FALSE. Since R knits in a fresh session, the required inputs were not available to plot
-
 df %>%
  ungroup() %>%
   mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
@@ -134,8 +130,7 @@ study_df %>%
   xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 ```
 
-This data is ready for analysis of headway distributions based off of modifications to TSP strategies. Tables showing descriptive statistics of the data set is shown below. A breakdown of the TSP thresholds is first shown along with a timeline of when each threshold was in effect, followed by a table of descriptive statistics for a number of the data elements. It appears from the data that there were transition periods between when threshold levels were in effect.
-
+This data is ready for analysis of headway distributions based off of modifications to TSP strategies. Tables showing descriptive statistics of the data set is shown below. A breakdown of the TSP thresholds is first shown along with a timeline of when each threshold was in effect, followed by a table of descriptive statistics for a number of the data elements.
 ```{r descriptive TSP data table, echo = FALSE}
 #Distribution of TSP thresholds
 datasummary_skim(study_df %>% select(threshold), type = "categorical", title = "Distribution of UVX TSP Thresholds")
@@ -146,14 +141,14 @@ datasummary_skim(study_df %>% select(threshold), type = "categorical", title = "
 |Start Date|End Date|Threshold|
 |----------|--------|--------|
 |January 2, 2019|June 7, 2019|5 min|
-|June 8, 2019|June 9, 2019|No data|
+|June 8, 2019|June 9, 2019|Transition period|
 |June 10, 2019|July 12, 2019|2 min|
-|July 13, 2019|July 14, 2019|No data|
+|July 13, 2019|July 14, 2019|Transition period|
 |July 15, 2019|July 26, 2019|No TSP|
-|July 27, 2019|July 28, 2019|No data|
+|July 27, 2019|July 28, 2019|Transition period|
 |July 29, 2019|July 29, 2019|N/A|
 |July 30, 2019|August 9, 2019|Always|
-|August 10, 2019|August 11, 2019|No data|
+|August 10, 2019|August 11, 2019|Transition period|
 |August 12, 2019|December 30, 2019|2 min|
 
 ```{r descriptive statistics, echo = FALSE}

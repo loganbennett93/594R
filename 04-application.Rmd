@@ -15,13 +15,13 @@ library(multcompView)
 library(knitr)
 ```
 
-The timepoint data was **previously analyzed** for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, 
+The timepoint data was reviously analyzed for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, 
 the distributions of the four thresholds were not the same. That brief analysis is shown below.
 
 ```{r load 4, echo = FALSE}
 #Download data from data file
 (df <- read_csv(
-  "Data/UVX_Reliability_2019.csv/UVX_Reliability_2019.csv",
+  "Data/UVX_Reliability_2019.zip",
   col_types = str_c(rep("c", 24), collapse = "")
   ))
 ```
