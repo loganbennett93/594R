@@ -35,24 +35,4 @@ These studies indicate the need to view BRT system performance in terms of both 
 
 @CATS2014223 performed a study of a regularity-driven operation scheme in Stockholm, Sweden to improve reliability and mitigate bus bunching. Using a series of field experiments and measuring performance with regularity indicators such as headway coefficient of variation, headway adherence, and average excess waiting time, he determined that a headway-based control strategy was effective in not only narrowing the headway distribution from the previous schedule-bases strategy, but also reducing waiting times, more evenly distributing dwell times, and maintaining running times. @CHEN2012 also performed a headway-based study to measure the effects of real-time preventive operations control. They found that reliability is improved with lower permitted headway deviations and lower fluctuations of running times. When real-time information is used to predict service reliability and trigger preventive control, such as reduced dwell time and speed adjustments, bus bunching can be reduced.
 
-Both of these studies effectively demonstrate that solutions to bunching and other reliability-based operational problems are most effectively addressed through reliability-based control strategies. However, little has been done to evaluate the relationship between methods of TSP in a reliability-based control strategy. A study of TSP strategies with a focus on headway distribution could prove useful in gauging the benefits of TSP in a headway-based system, such as the UVX BRT system in Utah Valley.  
-
-
-## References
-    
-
-Al-Deek, H., Sandt, A., Alomari, A., Hussain, O. (2017). A technical note on evaluating the effectiveness of bus rapid transit with transit signal priority. Journal of Intelligent Transportation Systems, 21(3), 227-238. https://doi.org/10.1080/15472450.2017.1286987  
-
-Cats, O. (2014). Regularity-driven bus operation: Principles, implementation and business models. Transport Policy, 36, 223-230. https://doi.org/10.1016/j.tranpol.2014.09.002  
-
-Chen, W., Yang, C., Feng, F., Chen, Z. (2012). An Improved Model for Headway-Based Bus Service Unreliability Prevention with Vehicle Load Capacity Constraint at Bus Stops. Discrete Dynamics in Transportation Systems, 2012. https://doi.org/10.1155/2012/313518  
-
-Delgado,F., Muñoz,J.C., Giesen,R., Wilson,N.H.M. (2015). Integrated Real-Time Transit Signal Priority Control for High-Frequency Segregated Transit Services.Transportation Research Record, 2533(1), 28-38. https://doi.org/10.3141/2533-04  
-
-Ishaq, R., & Cats, O.(2020). Designing bus rapid transit systems:Lessons on service reliability and operations. Case Studies on Transport Policy, 8(3), 946-953. https://doi.org/10.1016/j.cstp.2020.05.001  
-
-Liu, X.C., Zlatkovic, M., Porter, R.J., Fayyaz, K., Yu, S.(2018). Improving Efficiency and Reliability of Bus Rapid Transit, MPC-18-349. North Dakota State University -Upper Great Plains Transportation Institute, Fargo: Mountain-Plains Consortium, 2018.  
-
-Ni, Y., Lo, H., Hsu, Y. (2020). Exploring the effects of passive transit signal priority design on bus rapid transit operation: a microsimulation-based optimization approach. Transportation Letters. https://doi.org/10.1080/19427867.2020.1805681  
-
-Yang, M., Sun, G., Wang, W., Sun, X., Ding, J., & Han, J. (2018). Evaluation of the pre-detective signal priority for bus rapid transit: coordinating the primary and secondary intersections.Transport,33(1), 41-51. https://doi.org/10.3846/16484142.2015.1004556
+Both of these studies effectively demonstrate that solutions to bunching and other reliability-based operational problems are most effectively addressed through reliability-based control strategies. However, little has been done to evaluate the relationship between methods of TSP in a reliability-based control strategy. A study of TSP strategies with a focus on headway distribution could prove useful in gauging the benefits of TSP in a headway-based system, such as the UVX BRT system in Utah Valley.
