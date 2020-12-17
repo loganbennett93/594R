@@ -8,7 +8,11 @@ The packages necessary to perform all functions found within this project includ
 
 tidyverse  
 
+<<<<<<< HEAD
 readxl 
+=======
+readxl  
+>>>>>>> db983de5fe8e06685ecef9f758d280104a40f489
 
 lubridate  
 
@@ -18,4 +22,8 @@ ANOVAreplication
 
 multcompView  
 
+<<<<<<< HEAD
 knitr
+=======
+knitr
+>>>>>>> db983de5fe8e06685ecef9f758d280104a40f489
