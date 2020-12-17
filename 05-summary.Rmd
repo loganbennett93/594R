@@ -1,3 +1,3 @@
-# Final Words
+# Conclusions and Recommendations
 
-We have finished a nice book.
+This analysis has shown no evidence that TSP thresholds provide a significant effect on the headway distribution of buses belonging to the UVX BRT system when accounting for location and direction alone. This analysis only considers geospatial aspects of the dataset provided, and does not delve into analysis of geotemporal aspects of the BRT route such as time of day or dwell time. Further analysis incorporating these parameters may yield more specific results of the effects of TSP.

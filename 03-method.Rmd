@@ -130,7 +130,7 @@ study_df %>%
   xlab("Absolute discrepancy between scheduled and actual headways [minutes]")
 ```
 
-This data is ready for analysis of headway distributions based off of modifications to TSP strategies. Tables showing descriptive statistics of the data set is shown below. A breakdown of the TSP thresholds is first shown along with a timeline of when each threshold was in effect, followed by a table of descriptive statistics for a number of the data elements.
+This data is ready for analysis of headway distributions based off of modifications to TSP strategies. Tables showing descriptive statistics of the data set is shown below. A breakdown of the TSP thresholds is first shown along with a timeline of when each threshold was in effect, followed by a table of descriptive statistics for a number of the data elements. Values for the numeric statistics are provided in seconds.
 ```{r descriptive TSP data table, echo = FALSE}
 #Distribution of TSP thresholds
 datasummary_skim(study_df %>% select(threshold), type = "categorical", title = "Distribution of UVX TSP Thresholds")

@@ -116,8 +116,19 @@ ggplot(alwaysdf, aes(x = discrepancy / 60)) +
 
 The histograms above show that comparison of headway discrepancy for the respective TSP thresholds considered across the entire bus route yields little visual implication of a difference in distributions. The only noticeable difference between the distributions are the frequencies of headway discrepancies for the respective thresholds due to the varying lengths of time that each was in effect. A one-way ANOVA indicates that the means of these distributions are not significantly different, as shown below.
 
-```{r}
-#Use t-tests to show that in spite of distributions, means are not statistically different (t-tests or ANOVA proving Tukey isn't necessary)
+```{r previous analysis anova, echo = FALSE}
+
+#Convert data to numeric
+study_df$reliability <- as.numeric(study_df$reliability)
+study_df$dwell <- as.numeric(study_df$dwell)
+study_df$travel <- as.numeric(study_df$travel)
+study_df$hw_actl <- as.numeric(study_df$hw_actl)
+study_df$hw_schd <- as.numeric(study_df$hw_schd)
+study_df$discrepancy <- as.numeric(study_df$discrepancy)
+study_df$cumdwell <- as.numeric(study_df$cumdwell)
+
+#Use Analysis of Variance to prove that means are not statistically different (t-tests or ANOVA proving Tukey isn't necessary)
+
 lmtsp <- lm(discrepancy ~ threshold, data = study_df)
 anova(lmtsp)
 ```
@@ -401,33 +412,300 @@ kable(Groupsummary)
 
 The results of splitting up the trips by location are expected. There is not a large variation of discrepancies when routes are compared with both their northbound and southbound trips included. This is likely due to the trend seen in the northbound and southbound groups. The mean discrepancy increases in the northbound trips as the buses travel from the start of the trip in Provo towards the end of the trip near UVU. The same trend is seen in the southbound trips from UVU to Provo. The standard deviations of headway discrepancies behave the same way. This indicates the cumulative nature of headway discrepancy. As buses progress along their routes, irregularities tend to compound. This is may be due to problems such as the bunching phenomenon discussed in the literature.
 
-The differences between these groups are difficult to determine visually, but statistical tests can help determine which if any differences are significant. To investigate whether there are differences between the groups, F-tests will be performed to determine if there are significant differences between any of groups. If significant differences are observed, then the Tukey-Kramer procedure for multiple comparisons of unplanned differences will be used to evaluate them.
+By means of data visualization and exploration, we have determined that the data is organized in a way that meets assumptions for further statistical tests. We are specifically interested in the distributions of headway discrepancy for the four respective TSP thresholds. Initial analysis above indicated that there is no statistical difference between mean headway discrepancy for the respective thresholds when considered in the context of the entire bus route. However, we may be able to evaluate certain locations along the route where TSP thresholds do affect the headway discrepancy. If statistical differences do appear, this may indicate that TSP thresholds do play a role for certain portions of the UVX route.
 
 
 ## statistical Tests on Grouped Distributions
 
-The results of F-tests run to compare the full routes, NB routes, and SB routes are shown below.
+For each of the 12 partitioned groups of the UVX route, a boxplot comparing headway discrepancy by TSP threshold will be shown along with an ANOVA table. The differences between these groups are difficult to determine based off of visuals alone, but the *F*-tests can help determine which, if any, differences are significant. If significant differences are observed, then the Tukey-Kramer post-hoc procedure for multiple comparisons of unplanned differences will be used to evaluate them. From those analyses, conclusions will be made about the effect of TSP thresholds on sections of the UVX route.The results of F-tests run to compare TSP thresholds within the partitioned groups are shown below.
 
-```{r F- tests on group distributions, echo = FALSE}
+```{r boxplot on PROVO, echo = FALSE}
+#Remove rows where threshold = "NA" from the PROVO group
+PROVO <- PROVO[!is.na(PROVO$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the PROVO group
+PROVO %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for Provo Trips (NB and SB)")
+```
+
+```{r F-test on PROVO, echo = FALSE}
+#Run F-test on Provo group
+PROVOlm <- lm(discrepancy ~ threshold, data = PROVO)
+anova(PROVOlm)
+```
+
+```{r boxplot on BYU, echo = FALSE}
+#Remove rows where threshold = "NA" from the BYU group
+BYU <- BYU[!is.na(BYU$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the BYU group
+BYU %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for BYUTrips (NB and SB)")
+```
+
+```{r F-test on BYU, echo = FALSE}
+#Run F-test on BYU group
+BYUlm <- lm(discrepancy ~ threshold, data = BYU)
+anova(BYUlm)
+```
+
+```{r boxplot on UNI, echo = FALSE}
+#Remove rows where threshold = "NA" from the UNI group
+UNI <- UNI[!is.na(UNI$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the UNI group
+UNI %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for UNI Trips (NB and SB)")
+```
+
+```{r F-test on UNI, echo = FALSE}
+UNIlm <- lm(discrepancy ~ threshold, data = UNI)
+anova(UNIlm)
+```
+
+```{r boxplot on UVU, echo = FALSE}
+#Remove rows where threshold = "NA" from the UVU group
+UVU <- UVU[!is.na(UVU$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the UVU group
+UVU %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for UVU Trips (NB and SB)")
+```
+
+```{r F-test on UVU, echo = FALSE}
+UVUlm <- lm(discrepancy ~ threshold, data = UVU)
+anova(UVUlm)
+```
+
+visualization of the cumulative headway discrepancies for the respective TSP thresholds shows little variation between the locations, and nothing that strongly indicates differences between the effects of TSP thresholds. Results from the *F*-tests indicate no evidence of a difference between mean headway discrepancies based on TSP threshold in any of the above groups, as indicated by the high reported *p*-values (0.5722 for the PROVO group, 0.8082 for the BYU group, 0.9808 for the UNI group, and 0.9524 for the UVU group). This finding is not surprising considering the cumulative nature of the headway discrepancy when a group is near the start or end of a trip. The NB and SB discrepancies likely mitigate each other to a certain extent. We may find different results when analysis is run on the NB or SB groups.
+
+
+The results of F-tests run to compare TSP thresholds within the partitioned NB groups are shown below.
+
+```{r boxplot on PROVONB, echo = FALSE}
+#Remove rows where threshold = "NA" from the PROVONB group
+PROVONB <- PROVONB[!is.na(PROVONB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the PROVONB group
+PROVONB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for PROVO NB Trips")
+```
+
+```{r F-test on PROVONB, echo = FALSE}
+PROVONBlm <- lm(discrepancy ~ threshold, data = PROVONB)
+anova(PROVONBlm)
+```
+
+```{r boxplot on BYUNB, echo = FALSE}
+#Remove rows where threshold = "NA" from the BYUNB group
+BYUNB <- BYUNB[!is.na(BYUNB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the BYUNB group
+BYUNB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for BYU NB Trips")
+```
+
+```{r F-test on BYUNB, echo = FALSE}
+BYUNBlm <- lm(discrepancy ~ threshold, data = BYUNB)
+anova(BYUNBlm)
+```
+
+```{r boxplot on UNINB, echo = FALSE}
+#Remove rows where threshold = "NA" from the UNINB group
+UNINB <- UNINB[!is.na(UNINB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the UNINB group
+UNINB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for UNI NB Trips")
+```
+
+```{r F-test on UNINB, echo = FALSE}
+UNINBlm <- lm(discrepancy ~ threshold, data = UNINB)
+anova(UNINBlm)
+```
+
+```{r Cumulative Headway Discrepancy on UVUNB, echo = FALSE}
+#Remove rows where threshold = "NA" from the UVUNB group
+UVUNB <- UVUNB[!is.na(UVUNB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the UVUNB group
+UVUNB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for UVU NB Trips")
+```
+
+```{r F-test on UVUNB, echo = FALSE}
+UVUNBlm <- lm(discrepancy ~ threshold, data = UVUNB)
+anova(UVUNBlm)
+```
+
+The results of F-tests run to compare TSP thresholds within the partitioned SB groups are shown below.
+
+```{r boxplot on PROVOSB, echo = FALSE}
+#Remove rows where threshold = "NA" from the PROVOSB group
+PROVOSB <- PROVOSB[!is.na(PROVOSB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the PROVOSB group
+PROVOSB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for PROVO SB Trips")
+```
+
+```{r F-test on PROVOSB, echo = FALSE}
+PROVOSBlm <- lm(discrepancy ~ threshold, data = PROVOSB)
+anova(PROVOSBlm)
+```
+
+```{r boxplot on BYUSB, echo = FALSE}
+#Remove rows where threshold = "NA" from the BYUSB group
+BYUSB <- BYUSB[!is.na(BYUSB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the BYUSB group
+BYUSB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for BYU SB Trips")
+```
+
+```{r F-test on BYUSB, echo = FALSE}
+BYUSBlm <- lm(discrepancy ~ threshold, data = BYUSB)
+anova(BYUSBlm)
+```
+
+```{r boxplot on UNISB, echo = FALSE}
+#Remove rows where threshold = "NA" from the UNISB group
+UNISB <- UNISB[!is.na(UNISB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the UNISB group
+UNISB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for UNI SB Trips")
+```
+
+```{r F-test on UNISB, echo = FALSE}
+UNISBlm <- lm(discrepancy ~ threshold, data = UNISB)
+anova(UNISBlm)
+```
+
+```{r boxplot on UVUSB, echo = FALSE}
+#Remove rows where threshold = "NA" from the UVUSB group
+UVUSB <- UVUSB[!is.na(UVUSB$threshold),]
+
+#Create a boxplot of headway discrepancies by TSP for the UVUSB group
+UVUSB %>%
+  ungroup() %>%
+  mutate(discrepancy = as.numeric(abs(discrepancy) + 1)) %>% # +1 for log(0)
+  ggplot(aes(x = log(discrepancy / 60), color = threshold)) + # convert seconds to minutes
+  geom_boxplot() +
+  xlab("Log Minutes") +
+  theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
+  ggtitle("Comparitive Boxplot of TSP Thresholds for UVU SB Trips")
+```
+
+```{r F-test on UVUSB, echo = FALSE}
+UVUSBlm <- lm(discrepancy ~ threshold, data = UVUSB)
+anova(UVUSBlm)
+```
+
+The same pattern of cumulative headway discrepancy is seen by comparison of the routes, with the mean headway discrepancy slightly increasing towards the end of each respective NB or SB route. However, results of the *F*-tests on the groups partitioned by both location and direction were similar to those of the groups partitioned by location alone. A table of *p*-values for all twelve groups is shown below.
+
+|Route Group|*p*-value|
+|-----------|---------|
+|PROVO|0.5722|
+|BYU|0.8082|
+|UNI|0.9808|
+|UVU|0.9524|
+|PROVO (NB)|0.7539|
+|BYU (NB)|0.7966|
+|UNI (NB)|0.9696|
+|UVU (NB)|0.8981|
+|PROVO (SB)|0.6013|
+|BYUSB (SB)|0.8614|
+|UNISB (SB)|0.9675|
+|UVUSB (SB)|0.9644|
+
+
+In none of the groups is there any evidence of a difference between mean headway discrepancy when accounting for the four different TSP thresholds. Even in the PROVO group, which had the lowest *p*-value, the differences between TSP thresholds is insignificant. Estimates of those differences are shown in the following Tukey-Kramer post-hoc test. There is no indication of differences in headway discrepancy for any comparison of TSP thresholds, as all *p*-values reported are all very high. This is consistent across each of the 12 groups, and this analysis is shown here only for reference. 
+
+```{r example Tukey on PROVO group, echo = FALSE}
+#Perform a Tukey-Kramer test of multiple comparisons on the PROVO group
+AOVPROVO <- aov(PROVOlm)
+TukeyPROVO <- TukeyHSD(AOVPROVO)
+TukeyPROVO
+```
+This analysis has shown no evidence that TSP thresholds provide a significant effect on the headway distribution of buses belonging to the UVX BRT system when accounting for location and direction alone. There may be a number of confounding factors not included in this analysis. For example, variability in ridership may affect dwell times and the ability for buses to meet acceptable headways without triggering TSP in certain locations. A simple comparison of cumulative headway distribution by trip direction may indicate this possible effect. The cumulative headway discrepancy plots below show differences between mean headway discrepancies of the UVU, UNI, BYU, or PROVO groups when compared to their respective two-way, NB, or SB counterparts.
+
+```{r cumulative headway discrepancy, echo = FALSE}
 #Create a model and perform the F test for the Fullroutes dataframe
 Fullrouteslm <- lm(Discrepancy ~ Route, data = Fullroutes)
-anova(Fullrouteslm)
-#p-value of 0.884- no evidence of a difference
 
 #Create a model and perform the F test for the NBroutes dataframe
 NBrouteslm <- lm(Discrepancy ~ Route, data = NBroutes)
-anova(NBrouteslm)
-#p-value of 0.01114- moderate evidence of a difference
 
 #Create a model and perform the F test for the SBroutes dataframe
 SBrouteslm <- lm(Discrepancy ~ Route, data = SBroutes)
-anova(SBrouteslm)
-#p-value of 0.08066, suggestive but inconclusive evidence of a difference
-```
 
-The F-tests above indicate whether there are differences between mean headway discrepancies of the UVU, UNI, BYU, or PROVO groups when compared to their respective full, NB, or SB counterparts. The tests indicate that when comparing these four sections of the bus route, there is no evidence of a difference between the groups when both their NB and SB trips are combined (*p*-value = 0.884). There is moderate evidence of a difference between at least two of the NB groups (*p*-value = 0.01114). There is suggestive, but inconclusive evidence of a difference between at least two of the SB groups (*p*-value = 0.08066). The differences described here can be seen more clearly in comparative plots of the cumulative headway discrepancy, as shown below.
-
-```{r cumulative headway discrepancy, echo = FALSE}
 #Compare the Full routes
 Fullroutes %>%
   ungroup() %>%
@@ -459,60 +737,7 @@ SBroutes %>%
   ggtitle("SB Routes")
 ```
 
-It can easily be seen from the plots that in combining the NB and SB trips for each group (PROVO, BYU, UNI, or UVU), the discrepancies do not vary much, likely due to the opposite effect of compounding irregularities from the trip origin. However, there are some differences between the NB and SB groups that are worth noting. In the plot of the NB routes, there appears to be a fairly even distribution of headway discrepancies along the route. No one group appears to be more influential to the discrepancy, but the discrepancy does increase between all sections when buses travel from Provo to UVU. However, in the plot of the SB routes, the cumulative headway distribution varies less from between the UNI, BYU, and PROVO sections. This indicates that headway deviations are not particularly exacerbated during that portion of the bus trips. This could be due to lower demand in the SB trips past the BYU area, as much of the ridership is likely students traveling between BYU and UVU.
+It can easily be seen from the plots that in combining the NB and SB trips for each group (PROVO, BYU, UNI, or UVU), the discrepancies do not vary much, likely due to the opposite effect of compounding irregularities from the trip origin. However, there are some differences between the NB and SB groups that are worth noting. In the plot of the NB routes, there appears to be a fairly even distribution of headway discrepancies along the route. No one group appears to be more influential to the discrepancy, but the discrepancy does increase between all sections when buses travel from Provo to UVU. However, in the plot of the SB routes, the cumulative headway distribution varies less between the UNI, BYU, and PROVO sections. This smaller variance demonstrates that headway deviations are not particularly exacerbated during that portion of the bus trips, which could be due to lower demand in the SB trips past the BYU area, as much of the ridership is likely students traveling between BYU and UVU. Further analysis of the relationships between TSP, location, and dwell time could provide more meaningful insights.
 
-Estimates of the differences in mean headway discrepancy are provided by the Tukey-Kramer procedure for multiple comparisons. Because no significant differences were found for the groups including both NB and SB trips, no estimates for those groups are evaluated. Estimates of the differences for the NB groups and then the SB groups are provided below.
+Other factors that could be influential to the data include time of year and time of day. Where this analysis was performed considering the geospatial aspects of the timepoint data, it did not consider geotemporal aspects of the BRT system. Time of year was somewhat included in the analysis due to the fact that the different TSP thresholds were in effect at different times of the year. It is possible that TSP thresholds could be more significant during peak or off-peak periods of the day, and this possibility was ignored in the data analysis presented here.
 
-```{r Tukey on group distributions, echo = FALSE}
-#Perform a Tukey-Kramer test of multiple comparisons on the NB routes
-AOVNB <- aov(NBrouteslm)
-TukeyNB <- TukeyHSD(AOVNB)
-TukeyNB
-
-#Perform a Tukey-Kramer test of multiple comparisons on the SB routes
-AOVSB <- aov(SBrouteslm)
-TukeySB <- TukeyHSD(AOVSB)
-TukeySB
-```
-The adjusted *p*-values indicate the significance of differences between groups and, as expected, they are smallest for the sections that are furthest apart from each other (UVUNB-PROVONB and UVUSB-PROVOSB). It is estimated with 95% confidence that the headway discrepancy increases by 1.87 minutes between the PROVO section and the UVU section for NB buses. That difference is estimated as 1.62 minutes for SB traffic. The differences between each adjacent section are also provided above. It should be noted that the differences between PROVO and BYU are estimated with the opposite sign as the other differences due to the fact that it subtracts the northern section's mean from the southern section's mean, whereas all other relationships do the opposite.
-
-These tests give us a glimpse of the differences in headway deviation by location, but further analysis will provide us a clearer idea of the differences at play with regards to TSP modifications.
-
-
-## KS Tests on Grouped Distributions
-
-The Kolmogorov-Smirnov test is a non-parametric test of probability distributions, and can be used with the given dataset to compare groups. We will first compare the cumulative distributions of headway discrepancy for the NB and SB trips, since differences based on direction have previously been identified. Plots of the NB and SB cumulative headway discrepancies are shown below.
-
-```{r cumulative headway by direction, echo = FALSE}
-#Show the cumulative distribution of the NB routes
-NBroutes %>%
-  ungroup() %>%
-  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
-  ggplot(aes(x = Discrepancy / 60)) + # convert seconds to minutes
-  stat_ecdf() +
-  scale_x_log10() +
-  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
-  ggtitle("NB Routes")
-
-#Show the cumulative distribution of the SB routes
-SBroutes %>%
-  ungroup() %>%
-  mutate(Discrepancy = as.numeric(abs(Discrepancy) + 1)) %>% # +1 for log(0)
-  ggplot(aes(x = Discrepancy / 60)) + # convert seconds to minutes
-  stat_ecdf() +
-  scale_x_log10() +
-  xlab("Cumulative discrepancy between scheduled and actual headways [minutes]") +
-  ggtitle("SB Routes")
-```
-
-
-```{r KS tests, echo = FALSE}
-#I am a little unsure of how to use the ks test. I want to show comparisons between the cumulative distributions of headways I believe.
-#I am a little lost as to how to incorporate the TSP thresholds into my analysis.
-#Below is a ks test comparing the NB cumulative distribution to he SB cumulative distribution
-ks.test(NBroutes$Discrepancy, SBroutes$Discrepancy)
-```
-The test performed above compares the two cumulative distribution plots shown. The extremely small *p*-value of 2.2e-16 indicates with convincing evidence that the the NB discrepancies and SB discrepancies were not drawn from the same continuous distribution, and are significantly different.
-
-
-**Further analysis needs to be done regarding TSP thresholds, since I was unsure of how to fit them into this analysis. I hope to meet with Dr. Macfarlane sometime this week to go over the work I've done and receive clarification on some tests so I can make the necessary modifications.**
