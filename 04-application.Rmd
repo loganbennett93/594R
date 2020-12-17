@@ -15,8 +15,7 @@ library(multcompView)
 library(knitr)
 ```
 
-The timepoint data was reviously analyzed for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, 
-the distributions of the four thresholds were not the same. That brief analysis is shown below.
+The timepoint data was reviously analyzed for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, the distributions of the four thresholds were not the same. That brief analysis is shown below.
 
 ```{r load 4, echo = FALSE}
 #Download data from data file
@@ -431,10 +430,13 @@ PROVO %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for Provo Trips (NB and SB)")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for Provo Trips (NB and SB)")
 ```
 
 ```{r F-test on PROVO, echo = FALSE}
+#Convert data to numeric for F-test to work
+PROVO$discrepancy <- as.numeric(PROVO$discrepancy)
+
 #Run F-test on Provo group
 PROVOlm <- lm(discrepancy ~ threshold, data = PROVO)
 anova(PROVOlm)
@@ -452,10 +454,13 @@ BYU %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for BYUTrips (NB and SB)")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for BYU Trips (NB and SB)")
 ```
 
 ```{r F-test on BYU, echo = FALSE}
+#Convert data to numeric for F-test to work
+BYU$discrepancy <- as.numeric(BYU$discrepancy)
+
 #Run F-test on BYU group
 BYUlm <- lm(discrepancy ~ threshold, data = BYU)
 anova(BYUlm)
@@ -473,10 +478,13 @@ UNI %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for UNI Trips (NB and SB)")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for UNI Trips (NB and SB)")
 ```
 
 ```{r F-test on UNI, echo = FALSE}
+#Convert data to numeric for F-test to work
+UNI$discrepancy <- as.numeric(UNI$discrepancy)
+
 UNIlm <- lm(discrepancy ~ threshold, data = UNI)
 anova(UNIlm)
 ```
@@ -493,10 +501,13 @@ UVU %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for UVU Trips (NB and SB)")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for UVU Trips (NB and SB)")
 ```
 
 ```{r F-test on UVU, echo = FALSE}
+#Convert data to numeric for F-test to work
+UVU$discrepancy <- as.numeric(UVU$discrepancy)
+
 UVUlm <- lm(discrepancy ~ threshold, data = UVU)
 anova(UVUlm)
 ```
@@ -518,10 +529,13 @@ PROVONB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for PROVO NB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for Provo NB Trips")
 ```
 
 ```{r F-test on PROVONB, echo = FALSE}
+#Convert data to numeric for F-test to work
+PROVONB$discrepancy <- as.numeric(PROVONB$discrepancy)
+
 PROVONBlm <- lm(discrepancy ~ threshold, data = PROVONB)
 anova(PROVONBlm)
 ```
@@ -538,10 +552,13 @@ BYUNB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for BYU NB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for BYU NB Trips")
 ```
 
 ```{r F-test on BYUNB, echo = FALSE}
+#Convert data to numeric for F-test to work
+BYUNB$discrepancy <- as.numeric(BYUNB$discrepancy)
+
 BYUNBlm <- lm(discrepancy ~ threshold, data = BYUNB)
 anova(BYUNBlm)
 ```
@@ -558,10 +575,13 @@ UNINB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for UNI NB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for UNI NB Trips")
 ```
 
 ```{r F-test on UNINB, echo = FALSE}
+#Convert data to numeric for F-test to work
+UNINB$discrepancy <- as.numeric(UNINB$discrepancy)
+
 UNINBlm <- lm(discrepancy ~ threshold, data = UNINB)
 anova(UNINBlm)
 ```
@@ -578,10 +598,13 @@ UVUNB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for UVU NB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for UVU NB Trips")
 ```
 
 ```{r F-test on UVUNB, echo = FALSE}
+#Convert data to numeric for F-test to work
+UVUNB$discrepancy <- as.numeric(UVUNB$discrepancy)
+
 UVUNBlm <- lm(discrepancy ~ threshold, data = UVUNB)
 anova(UVUNBlm)
 ```
@@ -600,10 +623,13 @@ PROVOSB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for PROVO SB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for Provo SB Trips")
 ```
 
 ```{r F-test on PROVOSB, echo = FALSE}
+#Convert data to numeric for F-test to work
+PROVOSB$discrepancy <- as.numeric(PROVOSB$discrepancy)
+
 PROVOSBlm <- lm(discrepancy ~ threshold, data = PROVOSB)
 anova(PROVOSBlm)
 ```
@@ -620,10 +646,13 @@ BYUSB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for BYU SB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for BYU SB Trips")
 ```
 
 ```{r F-test on BYUSB, echo = FALSE}
+#Convert data to numeric for F-test to work
+BYUSB$discrepancy <- as.numeric(BYUSB$discrepancy)
+
 BYUSBlm <- lm(discrepancy ~ threshold, data = BYUSB)
 anova(BYUSBlm)
 ```
@@ -640,10 +669,13 @@ UNISB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for UNI SB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for UNI SB Trips")
 ```
 
 ```{r F-test on UNISB, echo = FALSE}
+#Convert data to numeric for F-test to work
+UNISB$discrepancy <- as.numeric(UNISB$discrepancy)
+
 UNISBlm <- lm(discrepancy ~ threshold, data = UNISB)
 anova(UNISBlm)
 ```
@@ -660,10 +692,13 @@ UVUSB %>%
   geom_boxplot() +
   xlab("Log Minutes") +
   theme(axis.ticks.y = element_blank(), axis.text.y = element_blank()) +
-  ggtitle("Comparitive Boxplot of TSP Thresholds for UVU SB Trips")
+  ggtitle("Boxplot of Headway Discrepancy by TSP Threshold for UVU SB Trips")
 ```
 
 ```{r F-test on UVUSB, echo = FALSE}
+#Convert data to numeric for F-test to work
+UVUSB$discrepancy <- as.numeric(UVUSB$discrepancy)
+
 UVUSBlm <- lm(discrepancy ~ threshold, data = UVUSB)
 anova(UVUSBlm)
 ```

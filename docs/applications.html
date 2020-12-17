@@ -24,7 +24,7 @@
 <meta name="author" content="Logan Bennett" />
 
 
-<meta name="date" content="2020-12-04" />
+<meta name="date" content="2020-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="methods.html"/>
-<link rel="next" href="final-words.html"/>
+<link rel="next" href="conclusions-and-recommendations.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -51,6 +51,8 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 
@@ -72,19 +74,16 @@
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Abstract</a></li>
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
-<li class="chapter" data-level="2" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>2</b> Literature</a><ul>
-<li class="chapter" data-level="2.1" data-path="literature.html"><a href="literature.html#references"><i class="fa fa-check"></i><b>2.1</b> References</a></li>
-</ul></li>
+<li class="chapter" data-level="2" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>2</b> Literature</a></li>
 <li class="chapter" data-level="3" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>3</b> Methods</a><ul>
 <li class="chapter" data-level="3.1" data-path="methods.html"><a href="methods.html#data"><i class="fa fa-check"></i><b>3.1</b> Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>4</b> Applications</a><ul>
 <li class="chapter" data-level="4.1" data-path="applications.html"><a href="applications.html#grouped-distributions"><i class="fa fa-check"></i><b>4.1</b> Grouped Distributions</a></li>
 <li class="chapter" data-level="4.2" data-path="applications.html"><a href="applications.html#statistical-tests-on-grouped-distributions"><i class="fa fa-check"></i><b>4.2</b> statistical Tests on Grouped Distributions</a></li>
-<li class="chapter" data-level="4.3" data-path="applications.html"><a href="applications.html#ks-tests-on-grouped-distributions"><i class="fa fa-check"></i><b>4.3</b> KS Tests on Grouped Distributions</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>5</b> Final Words</a></li>
-<li class="chapter" data-level="" data-path="literature.html"><a href="literature.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="5" data-path="conclusions-and-recommendations.html"><a href="conclusions-and-recommendations.html"><i class="fa fa-check"></i><b>5</b> Conclusions and Recommendations</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -107,8 +106,57 @@
             <section class="normal" id="section-">
 <div id="applications" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Applications</h1>
-<p>The timepoint data was <strong>previously analyzed</strong> for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However,
-the distributions of the four thresholds were not the same. Further investigation of the data may explain differences that are seen between TSP thresholds but that do not significantly change the means of their respective distributions. To investigate the effects of TSP thresholds on headway reliability, a number of things can be done, including splitting up the routes by direction and location and performing additional statistical tests on the data to analyze for variation between groups. A preliminary analysis of the data split in that way is shown below.</p>
+<p>The timepoint data was reviously analyzed for headway distributions corresponding to the four separate TSP thresholds for the entire route and T-tests indicated that the means of the headway distributions were not significantly different. However, the distributions of the four thresholds were not the same. That brief analysis is shown below.</p>
+<pre><code>## # A tibble: 1,015,863 x 24
+##    NEW_Date Block Trip  Vehicle Route Direction `Time Point` Schedule
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;   
+##  1 1/2/19   2400  04:17 17110   830X  NB TO OR~ PROVFRST     04:17   
+##  2 1/2/19   2400  04:17 17110   830X  NB TO OR~ 400----S     04:19   
+##  3 1/2/19   2400  04:17 17110   830X  NB TO OR~ CNTR--ST     04:20   
+##  4 1/2/19   2400  04:17 17110   830X  NB TO OR~ 300----N     04:21   
+##  5 1/2/19   2400  04:17 17110   830X  NB TO OR~ ACADSQUR     04:22   
+##  6 1/2/19   2400  04:17 17110   830X  NB TO OR~ JOA-QUIN     04:24   
+##  7 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU-CMPS     04:26   
+##  8 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU----N     04:28   
+##  9 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU-STAD     04:29   
+## 10 1/2/19   2400  04:17 17110   830X  NB TO OR~ 2230---N     04:31   
+## # ... with 1,015,853 more rows, and 16 more variables: DepartureTime &lt;chr&gt;,
+## #   Status &lt;chr&gt;, Reliability &lt;chr&gt;, Dwell &lt;chr&gt;, Travel &lt;chr&gt;, Hour &lt;chr&gt;,
+## #   Headway &lt;chr&gt;, REL_sec &lt;chr&gt;, `TT+Dwe;;_sec` &lt;chr&gt;, Dwell_sec &lt;chr&gt;,
+## #   TT_sec &lt;chr&gt;, `tot TT+Dwell_sec` &lt;chr&gt;, `TP #` &lt;chr&gt;, Threshold &lt;chr&gt;,
+## #   ChangeDay &lt;chr&gt;, Peak &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 1,015,863 x 12
+##    route direction trip  timepoint vehicle date       time               
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;date&gt;     &lt;dttm&gt;             
+##  1 830X  NB        04:17 PROVFRST  17110   2019-01-02 2019-01-02 04:17:29
+##  2 830X  NB        04:17 400----S  17110   2019-01-02 2019-01-02 04:19:48
+##  3 830X  NB        04:17 CNTR--ST  17110   2019-01-02 2019-01-02 04:20:42
+##  4 830X  NB        04:17 300----N  17110   2019-01-02 2019-01-02 04:21:29
+##  5 830X  NB        04:17 ACADSQUR  17110   2019-01-02 2019-01-02 04:22:18
+##  6 830X  NB        04:17 JOA-QUIN  17110   2019-01-02 2019-01-02 04:24:10
+##  7 830X  NB        04:17 BYU-CMPS  17110   2019-01-02 2019-01-02 04:25:43
+##  8 830X  NB        04:17 BYU----N  17110   2019-01-02 2019-01-02 04:28:23
+##  9 830X  NB        04:17 BYU-STAD  17110   2019-01-02 2019-01-02 04:29:15
+## 10 830X  NB        04:17 2230---N  17110   2019-01-02 2019-01-02 04:31:22
+## # ... with 1,015,853 more rows, and 5 more variables: schedule &lt;dttm&gt;,
+## #   reliability &lt;drtn&gt;, dwell &lt;drtn&gt;, travel &lt;drtn&gt;, threshold &lt;fct&gt;</code></pre>
+<pre><code>## Warning: Removed 11 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="594R_files/figure-html/recreate%20previous%20analysis-1.png" width="672" /></p>
+<pre><code>## Warning: Removed 85 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="594R_files/figure-html/recreate%20previous%20analysis-2.png" width="672" /></p>
+<pre><code>## Warning: Removed 5 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="594R_files/figure-html/recreate%20previous%20analysis-3.png" width="672" /></p>
+<pre><code>## Warning: Removed 10 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="594R_files/figure-html/recreate%20previous%20analysis-4.png" width="672" /></p>
+<p>The histograms above show that comparison of headway discrepancy for the respective TSP thresholds considered across the entire bus route yields little visual implication of a difference in distributions. The only noticeable difference between the distributions are the frequencies of headway discrepancies for the respective thresholds due to the varying lengths of time that each was in effect. A one-way ANOVA indicates that the means of these distributions are not significantly different, as shown below.</p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3 8.5565e+04   28522  1.2736 0.2815
+## Residuals 808058 1.8096e+10   22395</code></pre>
+<p>An <em>F</em>-test of the headway discrepancy as a function of TSP thresholds indicates a large <em>p</em>-value of 0.2815, which provides no evidence that there is a difference in mean discrepancy between the thresholds when considered in the context of the entire route.</p>
+<p>Further investigation of the data may explain differences that are seen between TSP thresholds but that do not significantly change the means of their respective distributions. To investigate the effects of TSP thresholds on headway reliability, a number of things can be done, including splitting up the routes by direction and location and performing additional statistical tests on the data to analyze for variation between groups. A preliminary analysis of the data split in that way is shown below.</p>
 <div id="grouped-distributions" class="section level2">
 <h2><span class="header-section-number">4.1</span> Grouped Distributions</h2>
 <p>A comparison of headway distributions for separate locations and directions of travel may be insightful into the effects of TSP at different points along the UVX route. For this purpose, the route has been partitioned into the following 12 groups. Groups were chosen to capture groups of riders from four separate sections of the route, as well as to address major intersections where TSP may have more of an influence in one of two directions. In order to provide better comparisons of NB and SB routes, the PROVO groups do not include the stops south of Provo Central Station, since they only appear in the SB trips.</p>
@@ -222,40 +270,6 @@ the distributions of the four thresholds were not the same. Further investigatio
 </tr>
 </tbody>
 </table>
-<pre><code>## # A tibble: 1,015,863 x 24
-##    NEW_Date Block Trip  Vehicle Route Direction `Time Point` Schedule
-##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;   
-##  1 1/2/19   2400  04:17 17110   830X  NB TO OR~ PROVFRST     04:17   
-##  2 1/2/19   2400  04:17 17110   830X  NB TO OR~ 400----S     04:19   
-##  3 1/2/19   2400  04:17 17110   830X  NB TO OR~ CNTR--ST     04:20   
-##  4 1/2/19   2400  04:17 17110   830X  NB TO OR~ 300----N     04:21   
-##  5 1/2/19   2400  04:17 17110   830X  NB TO OR~ ACADSQUR     04:22   
-##  6 1/2/19   2400  04:17 17110   830X  NB TO OR~ JOA-QUIN     04:24   
-##  7 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU-CMPS     04:26   
-##  8 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU----N     04:28   
-##  9 1/2/19   2400  04:17 17110   830X  NB TO OR~ BYU-STAD     04:29   
-## 10 1/2/19   2400  04:17 17110   830X  NB TO OR~ 2230---N     04:31   
-## # ... with 1,015,853 more rows, and 16 more variables: DepartureTime &lt;chr&gt;,
-## #   Status &lt;chr&gt;, Reliability &lt;chr&gt;, Dwell &lt;chr&gt;, Travel &lt;chr&gt;, Hour &lt;chr&gt;,
-## #   Headway &lt;chr&gt;, REL_sec &lt;chr&gt;, `TT+Dwe;;_sec` &lt;chr&gt;, Dwell_sec &lt;chr&gt;,
-## #   TT_sec &lt;chr&gt;, `tot TT+Dwell_sec` &lt;chr&gt;, `TP #` &lt;chr&gt;, Threshold &lt;chr&gt;,
-## #   ChangeDay &lt;chr&gt;, Peak &lt;chr&gt;</code></pre>
-<pre><code>## # A tibble: 1,015,863 x 12
-##    route direction trip  timepoint vehicle date       time               
-##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;date&gt;     &lt;dttm&gt;             
-##  1 830X  NB        04:17 PROVFRST  17110   2019-01-02 2019-01-02 04:17:29
-##  2 830X  NB        04:17 400----S  17110   2019-01-02 2019-01-02 04:19:48
-##  3 830X  NB        04:17 CNTR--ST  17110   2019-01-02 2019-01-02 04:20:42
-##  4 830X  NB        04:17 300----N  17110   2019-01-02 2019-01-02 04:21:29
-##  5 830X  NB        04:17 ACADSQUR  17110   2019-01-02 2019-01-02 04:22:18
-##  6 830X  NB        04:17 JOA-QUIN  17110   2019-01-02 2019-01-02 04:24:10
-##  7 830X  NB        04:17 BYU-CMPS  17110   2019-01-02 2019-01-02 04:25:43
-##  8 830X  NB        04:17 BYU----N  17110   2019-01-02 2019-01-02 04:28:23
-##  9 830X  NB        04:17 BYU-STAD  17110   2019-01-02 2019-01-02 04:29:15
-## 10 830X  NB        04:17 2230---N  17110   2019-01-02 2019-01-02 04:31:22
-## # ... with 1,015,853 more rows, and 5 more variables: schedule &lt;dttm&gt;,
-## #   reliability &lt;drtn&gt;, dwell &lt;drtn&gt;, travel &lt;drtn&gt;, threshold &lt;fct&gt;</code></pre>
-<p>We also calculated elapsed headways, discrepancies between scheduled and actual headways, and cumulative dwell times on trips, as these are potential factors to verify the effects of manipulation on TSP thresholds.</p>
 <p>Histograms for the separate groups will be created for initial visualization of the data, so as to inspect for differences among the groups. The first four histograms show the UVU, UNI, BYU, and PROVO groups, respectively. The second four histograms show the same groups for NB trips, and the last four show the same groups for the SB trips.</p>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="594R_files/figure-html/group%20histograms-1.png" width="672" /></p>
@@ -354,80 +368,175 @@ the distributions of the four thresholds were not the same. Further investigatio
 </tbody>
 </table>
 <p>The results of splitting up the trips by location are expected. There is not a large variation of discrepancies when routes are compared with both their northbound and southbound trips included. This is likely due to the trend seen in the northbound and southbound groups. The mean discrepancy increases in the northbound trips as the buses travel from the start of the trip in Provo towards the end of the trip near UVU. The same trend is seen in the southbound trips from UVU to Provo. The standard deviations of headway discrepancies behave the same way. This indicates the cumulative nature of headway discrepancy. As buses progress along their routes, irregularities tend to compound. This is may be due to problems such as the bunching phenomenon discussed in the literature.</p>
-<p>The differences between these groups are difficult to determine visually, but statistical tests can help determine which if any differences are significant. To investigate whether there are differences between the groups, F-tests will be performed to determine if there are significant differences between any of groups. If significant differences are observed, then the Tukey-Kramer procedure for multiple comparisons of unplanned differences will be used to evaluate them.</p>
+<p>By means of data visualization and exploration, we have determined that the data is organized in a way that meets assumptions for further statistical tests. We are specifically interested in the distributions of headway discrepancy for the four respective TSP thresholds. Initial analysis above indicated that there is no statistical difference between mean headway discrepancy for the respective thresholds when considered in the context of the entire bus route. However, we may be able to evaluate certain locations along the route where TSP thresholds do affect the headway discrepancy. If statistical differences do appear, this may indicate that TSP thresholds do play a role for certain portions of the UVX route.</p>
 </div>
 <div id="statistical-tests-on-grouped-distributions" class="section level2">
 <h2><span class="header-section-number">4.2</span> statistical Tests on Grouped Distributions</h2>
-<p>The results of F-tests run to compare the full routes, NB routes, and SB routes are shown below.</p>
+<p>For each of the 12 partitioned groups of the UVX route, a boxplot comparing headway discrepancy by TSP threshold will be shown along with an ANOVA table. The differences between these groups are difficult to determine based off of visuals alone, but the <em>F</em>-tests can help determine which, if any, differences are significant. If significant differences are observed, then the Tukey-Kramer post-hoc procedure for multiple comparisons of unplanned differences will be used to evaluate them. From those analyses, conclusions will be made about the effect of TSP thresholds on sections of the UVX route.The results of F-tests run to compare TSP thresholds within the partitioned groups are shown below.</p>
+<p><img src="594R_files/figure-html/boxplot%20on%20PROVO-1.png" width="672" /></p>
 <pre><code>## Analysis of Variance Table
 ## 
-## Response: Discrepancy
+## Response: discrepancy
 ##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
-## Route          3 1.3744e+04  4581.5  0.2179  0.884
-## Residuals 864030 1.8165e+10 21023.3</code></pre>
+## threshold      3      38586   12862  0.6671 0.5722
+## Residuals 216828 4180759708   19282</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20BYU-1.png" width="672" /></p>
 <pre><code>## Analysis of Variance Table
 ## 
-## Response: Discrepancy
-##               Df     Sum Sq Mean Sq F value  Pr(&gt;F)  
-## Route          3     208824   69608  3.7038 0.01114 *
-## Residuals 438059 8232786977   18794                  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3      19367  6455.8  0.3238 0.8082
+## Residuals 252297 5030198546 19937.6</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20UNI-1.png" width="672" /></p>
 <pre><code>## Analysis of Variance Table
 ## 
-## Response: Discrepancy
-##               Df     Sum Sq Mean Sq F value  Pr(&gt;F)  
-## Route          3     157149   52383  2.2467 0.08066 .
-## Residuals 425967 9931614719   23315                  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>The F-tests above indicate whether there are differences between mean headway discrepancies of the UVU, UNI, BYU, or PROVO groups when compared to their respective full, NB, or SB counterparts. The tests indicate that when comparing these four sections of the bus route, there is no evidence of a difference between the groups when both their NB and SB trips are combined (<em>p</em>-value = 0.884). There is moderate evidence of a difference between at least two of the NB groups (<em>p</em>-value = 0.01114). There is suggestive, but inconclusive evidence of a difference between at least two of the SB groups (<em>p</em>-value = 0.08066). The differences described here can be seen more clearly in comparative plots of the cumulative headway discrepancy, as shown below.</p>
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3       3789  1262.9  0.0599 0.9808
+## Residuals 201854 4252553029 21067.5</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20UVU-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3       8305  2768.3  0.1133 0.9524
+## Residuals 189288 4625364807 24435.6</code></pre>
+<p>visualization of the cumulative headway discrepancies for the respective TSP thresholds shows little variation between the locations, and nothing that strongly indicates differences between the effects of TSP thresholds. Results from the <em>F</em>-tests indicate no evidence of a difference between mean headway discrepancies based on TSP threshold in any of the above groups, as indicated by the high reported <em>p</em>-values (0.5722 for the PROVO group, 0.8082 for the BYU group, 0.9808 for the UNI group, and 0.9524 for the UVU group). This finding is not surprising considering the cumulative nature of the headway discrepancy when a group is near the start or end of a trip. The NB and SB discrepancies likely mitigate each other to a certain extent. We may find different results when analysis is run on the NB or SB groups.</p>
+<p>The results of F-tests run to compare TSP thresholds within the partitioned NB groups are shown below.</p>
+<p><img src="594R_files/figure-html/boxplot%20on%20PROVONB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3      11512  3837.4  0.3988 0.7539
+## Residuals 114827 1104890857  9622.2</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20BYUNB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3      13260  4420.1  0.3397 0.7966
+## Residuals 124439 1619085318 13011.1</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20UNINB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3       5291  1763.7  0.0825 0.9696
+## Residuals 100443 2146412008 21369.5</code></pre>
+<p><img src="594R_files/figure-html/Cumulative%20Headway%20Discrepancy%20on%20UVUNB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##              Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold     3      20518    6839  0.1976 0.8981
+## Residuals 96417 3337166355   34612</code></pre>
+<p>The results of F-tests run to compare TSP thresholds within the partitioned SB groups are shown below.</p>
+<p><img src="594R_files/figure-html/boxplot%20on%20PROVOSB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3      56187   18729  0.6211 0.6013
+## Residuals 101997 3075689688   30155</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20BYUSB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3      20009  6669.7    0.25 0.8614
+## Residuals 127854 3411084056 26679.5</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20UNISB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##               Df     Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold      3       5384  1794.6  0.0864 0.9675
+## Residuals 101407 2106105845 20768.8</code></pre>
+<p><img src="594R_files/figure-html/boxplot%20on%20UVUSB-1.png" width="672" /></p>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: discrepancy
+##              Df    Sum Sq Mean Sq F value Pr(&gt;F)
+## threshold     3 3.834e+03    1278  0.0921 0.9644
+## Residuals 92867 1.288e+09   13870</code></pre>
+<p>The same pattern of cumulative headway discrepancy is seen by comparison of the routes, with the mean headway discrepancy slightly increasing towards the end of each respective NB or SB route. However, results of the <em>F</em>-tests on the groups partitioned by both location and direction were similar to those of the groups partitioned by location alone. A table of <em>p</em>-values for all twelve groups is shown below.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Route Group</th>
+<th><em>p</em>-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PROVO</td>
+<td>0.5722</td>
+</tr>
+<tr class="even">
+<td>BYU</td>
+<td>0.8082</td>
+</tr>
+<tr class="odd">
+<td>UNI</td>
+<td>0.9808</td>
+</tr>
+<tr class="even">
+<td>UVU</td>
+<td>0.9524</td>
+</tr>
+<tr class="odd">
+<td>PROVO (NB)</td>
+<td>0.7539</td>
+</tr>
+<tr class="even">
+<td>BYU (NB)</td>
+<td>0.7966</td>
+</tr>
+<tr class="odd">
+<td>UNI (NB)</td>
+<td>0.9696</td>
+</tr>
+<tr class="even">
+<td>UVU (NB)</td>
+<td>0.8981</td>
+</tr>
+<tr class="odd">
+<td>PROVO (SB)</td>
+<td>0.6013</td>
+</tr>
+<tr class="even">
+<td>BYUSB (SB)</td>
+<td>0.8614</td>
+</tr>
+<tr class="odd">
+<td>UNISB (SB)</td>
+<td>0.9675</td>
+</tr>
+<tr class="even">
+<td>UVUSB (SB)</td>
+<td>0.9644</td>
+</tr>
+</tbody>
+</table>
+<p>In none of the groups is there any evidence of a difference between mean headway discrepancy when accounting for the four different TSP thresholds. Even in the PROVO group, which had the lowest <em>p</em>-value, the differences between TSP thresholds is insignificant. Estimates of those differences are shown in the following Tukey-Kramer post-hoc test. There is no indication of differences in headway discrepancy for any comparison of TSP thresholds, as all <em>p</em>-values reported are all very high. This is consistent across each of the 12 groups, and this analysis is shown here only for reference.</p>
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = PROVOlm)
+## 
+## $threshold
+##                     diff       lwr      upr     p adj
+## 5 min-No TSP  -0.9902185 -5.014180 3.033743 0.9216924
+## 2 min-No TSP  -0.8463989 -4.846422 3.153624 0.9482872
+## Always-No TSP  1.0571259 -4.391204 6.505456 0.9594357
+## 2 min-5 min    0.1438197 -1.457287 1.744927 0.9956733
+## Always-5 min   2.0473445 -1.983494 6.078183 0.5597832
+## Always-2 min   1.9035248 -2.103416 5.910466 0.6138108</code></pre>
+<p>This analysis has shown no evidence that TSP thresholds provide a significant effect on the headway distribution of buses belonging to the UVX BRT system when accounting for location and direction alone. There may be a number of confounding factors not included in this analysis. For example, variability in ridership may affect dwell times and the ability for buses to meet acceptable headways without triggering TSP in certain locations. A simple comparison of cumulative headway distribution by trip direction may indicate this possible effect. The cumulative headway discrepancy plots below show differences between mean headway discrepancies of the UVU, UNI, BYU, or PROVO groups when compared to their respective two-way, NB, or SB counterparts.</p>
 <p><img src="594R_files/figure-html/cumulative%20headway%20discrepancy-1.png" width="672" /><img src="594R_files/figure-html/cumulative%20headway%20discrepancy-2.png" width="672" /><img src="594R_files/figure-html/cumulative%20headway%20discrepancy-3.png" width="672" /></p>
-<p>It can easily be seen from the plots that in combining the NB and SB trips for each group (PROVO, BYU, UNI, or UVU), the discrepancies do not vary much, likely due to the opposite effect of compounding irregularities from the trip origin. However, there are some differences between the NB and SB groups that are worth noting. In the plot of the NB routes, there appears to be a fairly even distribution of headway discrepancies along the route. No one group appears to be more influential to the discrepancy, but the discrepancy does increase between all sections when buses travel from Provo to UVU. However, in the plot of the SB routes, the cumulative headway distribution varies less from between the UNI, BYU, and PROVO sections. This indicates that headway deviations are not particularly exacerbated during that portion of the bus trips. This could be due to lower demand in the SB trips past the BYU area, as much of the ridership is likely students traveling between BYU and UVU.</p>
-<p>Estimates of the differences in mean headway discrepancy are provided by the Tukey-Kramer procedure for multiple comparisons. Because no significant differences were found for the groups including both NB and SB trips, no estimates for those groups are evaluated. Estimates of the differences for the NB groups and then the SB groups are provided below.</p>
-<pre><code>##   Tukey multiple comparisons of means
-##     95% family-wise confidence level
-## 
-## Fit: aov(formula = NBrouteslm)
-## 
-## $Route
-##                     diff         lwr       upr     p adj
-## PROVONB-BYUNB -0.8659409 -2.30390170 0.5720199 0.4093007
-## UNINB-BYUNB    0.5541748 -0.93649872 2.0448483 0.7749345
-## UVUNB-BYUNB    1.0050834 -0.50261566 2.5127824 0.3170022
-## UNINB-PROVONB  1.4201157 -0.09805976 2.9382911 0.0764671
-## UVUNB-PROVONB  1.8710243  0.33612832 3.4059202 0.0094177
-## UVUNB-UNINB    0.4509086 -1.13347831 2.0352955 0.8846249</code></pre>
-<pre><code>##   Tukey multiple comparisons of means
-##     95% family-wise confidence level
-## 
-## Fit: aov(formula = SBrouteslm)
-## 
-## $Route
-##                     diff       lwr       upr     p adj
-## PROVOSB-BYUSB  0.3094545 -1.333922 1.9528310 0.9627232
-## UNISB-BYUSB   -0.6894084 -2.335439 0.9566228 0.7042247
-## UVUSB-BYUSB   -1.3070022 -2.994562 0.3805573 0.1917981
-## UNISB-PROVOSB -0.9988629 -2.734714 0.7369882 0.4506580
-## UVUSB-PROVOSB -1.6164567 -3.391736 0.1588229 0.0893038
-## UVUSB-UNISB   -0.6175939 -2.395331 1.1601434 0.8087701</code></pre>
-<p>The adjusted <em>p</em>-values indicate the significance of differences between groups and, as expected, they are smallest for the sections that are furthest apart from each other (UVUNB-PROVONB and UVUSB-PROVOSB). It is estimated with 95% confidence that the headway discrepancy increases by 1.87 minutes between the PROVO section and the UVU section for NB buses. That difference is estimated as 1.62 minutes for SB traffic. The differences between each adjacent section are also provided above. It should be noted that the differences between PROVO and BYU are estimated with the opposite sign as the other differences due to the fact that it subtracts the northern section’s mean from the southern section’s mean, whereas all other relationships do the opposite.</p>
-<p>These tests give us a glimpse of the differences in headway deviation by location, but further analysis will provide us a clearer idea of the differences at play with regards to TSP modifications.</p>
-</div>
-<div id="ks-tests-on-grouped-distributions" class="section level2">
-<h2><span class="header-section-number">4.3</span> KS Tests on Grouped Distributions</h2>
-<p>The Kolmogorov-Smirnov test is a non-parametric test of probability distributions, and can be used with the given dataset to compare groups. We will first compare the cumulative distributions of headway discrepancy for the NB and SB trips, since differences based on direction have previously been identified. Plots of the NB and SB cumulative headway discrepancies are shown below.</p>
-<p><img src="594R_files/figure-html/cumulative%20headway%20by%20direction-1.png" width="672" /><img src="594R_files/figure-html/cumulative%20headway%20by%20direction-2.png" width="672" /></p>
-<pre><code>## Warning in ks.test(NBroutes$Discrepancy, SBroutes$Discrepancy): p-value will be
-## approximate in the presence of ties</code></pre>
-<pre><code>## 
-## 	Two-sample Kolmogorov-Smirnov test
-## 
-## data:  NBroutes$Discrepancy and SBroutes$Discrepancy
-## D = 0.040494, p-value &lt; 2.2e-16
-## alternative hypothesis: two-sided</code></pre>
-<p>The test performed above compares the two cumulative distribution plots shown. The extremely small <em>p</em>-value of 2.2e-16 indicates with convincing evidence that the the NB discrepancies and SB discrepancies were not drawn from the same continuous distribution, and are significantly different.</p>
-<p><strong>Further analysis needs to be done regarding TSP thresholds, since I was unsure of how to fit them into this analysis. I hope to meet with Dr. Macfarlane sometime this week to go over the work I’ve done and receive clarification on some tests so I can make the necessary modifications.</strong></p>
+<p>It can easily be seen from the plots that in combining the NB and SB trips for each group (PROVO, BYU, UNI, or UVU), the discrepancies do not vary much, likely due to the opposite effect of compounding irregularities from the trip origin. However, there are some differences between the NB and SB groups that are worth noting. In the plot of the NB routes, there appears to be a fairly even distribution of headway discrepancies along the route. No one group appears to be more influential to the discrepancy, but the discrepancy does increase between all sections when buses travel from Provo to UVU. However, in the plot of the SB routes, the cumulative headway distribution varies less between the UNI, BYU, and PROVO sections. This smaller variance demonstrates that headway deviations are not particularly exacerbated during that portion of the bus trips, which could be due to lower demand in the SB trips past the BYU area, as much of the ridership is likely students traveling between BYU and UVU. Further analysis of the relationships between TSP, location, and dwell time could provide more meaningful insights.</p>
+<p>Other factors that could be influential to the data include time of year and time of day. Where this analysis was performed considering the geospatial aspects of the timepoint data, it did not consider geotemporal aspects of the BRT system. Time of year was somewhat included in the analysis due to the fact that the different TSP thresholds were in effect at different times of the year. It is possible that TSP thresholds could be more significant during peak or off-peak periods of the day, and this possibility was ignored in the data analysis presented here.</p>
 
 </div>
 </div>
@@ -437,7 +546,7 @@ the distributions of the four thresholds were not the same. Further investigatio
         </div>
       </div>
 <a href="methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="final-words.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="conclusions-and-recommendations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
