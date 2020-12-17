@@ -6,10 +6,16 @@ A project website can be found at https://loganbennett93.github.io/594R/
 
 The packages necessary to perform all functions found within this project include:
 
-tidyverse
-readxl
-lubridate
-modelsummary
-ANOVAreplication
-multcompView
+tidyverse  
+
+readxl 
+
+lubridate  
+
+modelsummary  
+
+ANOVAreplication  
+
+multcompView  
+
 knitr
